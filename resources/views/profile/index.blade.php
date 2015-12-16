@@ -6,7 +6,8 @@
 
  @foreach ($comments as $comment)
     <div class="" style="margin-bottom: 20px">
-    <div class="">
+    <div class="thumbnail">
+      <img src="..." alt="...">
       <div class="caption">
         <h3>{{ $comment->name }}</h3>
         <p>{{ $comment->email }}</p>

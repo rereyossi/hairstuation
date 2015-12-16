@@ -1,20 +1,13 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Auth;
 
 use Illuminate\Http\Request;
 
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
 
-use App\Comment;
-
-use Input;
-use Validator;
-use Redirect;
-use Session;
-
-class CommentController extends Controller
+class RoleController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -26,11 +19,6 @@ class CommentController extends Controller
         //
     }
 
-    public function management(){
-      $comments = Comment::all();
-      return view('comment.management',compact('comments'));
-    }
-
     /**
      * Show the form for creating a new resource.
      *
@@ -38,7 +26,7 @@ class CommentController extends Controller
      */
     public function create()
     {
-        return view('comment.create');
+        //
     }
 
     /**
@@ -49,27 +37,7 @@ class CommentController extends Controller
      */
     public function store(Request $request)
     {
-
-
-        $validator = Validator::make($request->all(), [
-          'email' => 'required',
-          'name' => 'required',
-          'comment' => 'required',
-        ]);
-
-
-        if ($validator->fails()) {
-            return Redirect::to('comment/create')->withErrors($validator)->withInput();
-        }else {
-          $comment = new Comment;
-          $comment->name       = Input::get('name');
-          $comment->email      = Input::get('email');
-          $comment->comment    = Input::get('comment');
-          $comment->id_product = Input::get('id_product');
-          $comment->save();
-          return redirect('comment/create')->with('message', 'You have done successfully');
-        }
-
+        //
     }
 
     /**
@@ -78,12 +46,9 @@ class CommentController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show()
+    public function show($id)
     {
-      $id = 2;
-      $comments = Comment::where('id_product', '=', $id)->get();
-      return view('comment.index',compact('comments'));
-
+        //
     }
 
     /**
@@ -119,6 +84,4 @@ class CommentController extends Controller
     {
         //
     }
-
-
 }

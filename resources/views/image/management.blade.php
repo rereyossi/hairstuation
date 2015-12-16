@@ -19,7 +19,7 @@
             <td>{{ $image->title }}</td>
             <td>{{ $image->desc }}</td>
             <td>
-							<a href="{{ url('image/delelete/'.$image->id) }}">
+							<a href="{{ url('image/delete/'.$image->id) }}">
 								<span class="glyphicon glyphicon-trash" aria-hidden="true"></span>
 							</a>
             </td>

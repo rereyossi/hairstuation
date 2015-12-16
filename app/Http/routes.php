@@ -11,11 +11,11 @@
 |
 */
 
-// Route::get('/', function () {
-//     return view('welcome');
-// });
+Route::get('/', function () {
+    return view('welcome');
+});
 
-Route::get('/','ProductController@index');
+// Route::get('/','ProductController@index');
 
 
 // product
@@ -26,13 +26,13 @@ Route::post('product/save', 'ProductController@store');
 Route::get('product/detail/{id}', 'ProductController@show');
 Route::get('product/edit/{id}', 'ProductController@edit');
 Route::put('product/update/{id}', 'ProductController@update');
-Route::delete('product/delete/{id}', 'ProductController@destroy');
+Route::get('product/delete/{id}', 'ProductController@destroy');
 
 // comment
 Route::get('comment/management', 'CommentController@create');
 Route::get('comment/create', 'CommentController@create');
 Route::post('comment/save', 'CommentController@store');
-Route::get('comment/delete', 'CommentController@create');
+Route::get('comment/show', 'CommentController@show');
 
 // cart
 Route::get('cart/view', 'CartController@index');
@@ -61,11 +61,21 @@ Route::get('password/email', 'Auth\PasswordController@getEmail');
 Route::post('password/email', 'Auth\PasswordController@postEmail');
 
 
+// profile
+Route::get('profile/view', 'ProfileController@index');
+Route::get('profile/management', 'ProfileController@management');
+Route::get('profile/create/{id?}', 'ProfileController@create');
+Route::post('profile/save', 'ProfileController@store');
+Route::get('profile/detail', 'ProfileController@show');
+Route::get('profile/edit', 'ProfileController@edit');
+Route::put('profile/update', 'ProfileController@update');
+Route::get('profile/delete/{id}', 'ProfileController@destroy');
+
+
 // image
 Route::get('image/view', 'ImageController@index' );
 Route::get('image/management', 'ImageController@management' );
 Route::get('image/upload/{id?}', 'ImageController@upload' );
 Route::post('image/save/{id?}', 'ImageController@store' );
 Route::put('image/edit/{id}', 'ImageController@edit' );
-Route::delete('image/delete/{id}', 'ImageController@destroy' );
-Route::delete('image/oke/{id}', 'ImageController@oke' );
+Route::get('image/delete/{id}', 'ImageController@destroy' );

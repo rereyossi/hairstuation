@@ -16,6 +16,7 @@ use Input;
 use Validator;
 use Redirect;
 use Session;
+use Auth;
 
 class ProductController extends Controller
 {
@@ -34,9 +35,13 @@ class ProductController extends Controller
 
     public function management()
     {
-      $products = Product::all();
+      $user = Auth::user()->toArray();
+      var_dump($user);
+      if (Auth::check()):
+        $products = Product::all();
 
-      return view('product.management',compact('products'));
+        return view('product.management',compact('products'));
+      endif;
 
     }
 
@@ -95,8 +100,9 @@ class ProductController extends Controller
      */
     public function show($id)
     {
-      $product = Product::find($id);
-      return view('product.detail',compact('product'));
+
+        $product = Product::find($id);
+        return view('product.detail',compact('product'));
     }
 
     /**
