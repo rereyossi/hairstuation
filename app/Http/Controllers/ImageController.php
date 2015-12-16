@@ -165,7 +165,11 @@ return redirect('books');
      */
     public function destroy($id)
     {
-          Image::find($id)->delete();
+          $image = Image::find($id);
+          File::delete('uploads/images/original/'.$image->filename);
+          File::delete('uploads/images/medium/'.$image->filename);
+          File::delete('uploads/images/small/'.$image->filename);
+          $image->delete();
           return redirect('image/upload')->with('message', 'delete successfully');
 
     }

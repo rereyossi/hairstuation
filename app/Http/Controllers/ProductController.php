@@ -35,8 +35,9 @@ class ProductController extends Controller
 
     public function management()
     {
-      $user = Auth::user()->toArray();
-      var_dump($user);
+
+      $user = Auth::user();
+
       if (Auth::check()):
         $products = Product::all();
 

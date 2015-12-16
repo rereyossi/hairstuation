@@ -64,4 +64,15 @@ class AuthController extends Controller
     }
 
 
+    public function is_admin()
+    {
+      echo "is admin";
+    }
+
+    public function is_member()
+    {
+      echo "is member";
+    }
+
+
 }
