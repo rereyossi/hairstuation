@@ -4,29 +4,40 @@
 <br><br>
 <table class="table table-striped table-bordered table-hover">
      <thead>
-     <tr class="bg-info">
-         <th>Id</th>
+     <tr class="">
+         <th>no</th>
+         <th>display</th>
          <th>product name</th>
          <th>description</th>
          <th>price</th>
-         <th>status</th>
+         <th>category</th>
          <th colspan="3">Actions</th>
      </tr>
      </thead>
      <tbody>
+    <?php $index = 1; ?>
      @foreach ($products as $product)
          <tr>
-             <td>{{ $product->id }}</td>
+             <td>{{ $index }}</td>
+             <td>
+               @foreach($product->image as $image)
+                <img src="{{ url('uploads/images/small/'.$image->filename) }}" alt="" />
+               @endforeach
+             </td>
              <td>{{ $product->product_name }}</td>
              <td>{{ $product->desc }}</td>
              <td>{{ $product->price }}</td>
-             <td>{{ $product->status }}</td>
+             <td>{{ $product->category }}</td>
              <td>
-               <a href="{{ url('product/delete/'.$product->id)  }}">
+               <a href="{{ url('product/create/'.$product->id)  }}">
+                 <span class="glyphicon glyphicon-edit" aria-hidden="true"></span>
+               </a>
+               <a href="{{ url('product/delete/'.$product->id)  }}" onclick="return confirm('Are you sure want to delete this item')">
                  <span class="glyphicon glyphicon-trash" aria-hidden="true"></span>
                </a>
              </td>
          </tr>
+           <?php $index++; ?>
      @endforeach
 
      </tbody>

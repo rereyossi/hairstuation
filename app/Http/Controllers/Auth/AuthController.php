@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Auth;
 
 use App\User;
+use App\Group;
 use Validator;
 use App\Http\Controllers\Controller;
 use Illuminate\Foundation\Auth\ThrottlesLogins;
@@ -10,6 +11,8 @@ use Illuminate\Foundation\Auth\AuthenticatesAndRegistersUsers;
 
 class AuthController extends Controller
 {
+
+
     /*
     |--------------------------------------------------------------------------
     | Registration & Login Controller
@@ -30,7 +33,9 @@ class AuthController extends Controller
      */
     public function __construct()
     {
+        $this->middleware('admin', ['only' => 'management']);
         $this->middleware('guest', ['except' => 'getLogout']);
+
     }
 
     /**
@@ -56,23 +61,22 @@ class AuthController extends Controller
      */
     protected function create(array $data)
     {
-        return User::create([
+        $user = User::create([
             'name' => $data['name'],
             'email' => $data['email'],
             'password' => bcrypt($data['password']),
         ]);
+
+        $data = array('id_group' => 2, 'id_user'=> $user->id );
+        $group = User::set_group($data);
+
+        return $user;
     }
 
-
-    public function is_admin()
-    {
-      echo "is admin";
+    public function management(){
+      $auths = User::with('profile')->get();
+      $data['header'] = 'user management';
+      return view('auth.management',compact('auths'), $data);
     }
-
-    public function is_member()
-    {
-      echo "is member";
-    }
-
 
 }

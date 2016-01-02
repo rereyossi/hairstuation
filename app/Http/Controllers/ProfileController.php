@@ -9,18 +9,18 @@ use App\Http\Controllers\Controller;
 
 
 use App\Profile;
+use App\User;
 use Input;
 use Validator;
 use Redirect;
 use Session;
 use Auth;
-
+use Cart;
 class ProfileController extends Controller
 {
 
     public function _construct(){
       $user = Auth::user();
-
     }
 
     /**
@@ -30,18 +30,17 @@ class ProfileController extends Controller
      */
     public function index()
     {
-        //
+          // $profiles = profile::with('profile')->get()->toArray();
+          // var_dump($profiles);
     }
 
     public function management()
     {
 
-
-      if (Auth::check()):
+      if (Auth::user()){
         $profiles = Profile::all();
-
         return view('profile.management',compact('profiles'));
-      endif;
+      };
 
     }
 
@@ -52,7 +51,7 @@ class ProfileController extends Controller
      */
     public function create()
     {
-        return view('profile.create');
+
     }
 
     /**
@@ -65,8 +64,16 @@ class ProfileController extends Controller
     {
       $user = Auth::user();
       $validator = Validator::make($request->all(), [
+            'firstname' => 'required',
+            'lastname' => 'required',
+            'country' => 'required',
+            'street' => 'required',
+            'email' => 'required',
+            'city' => 'required',
+            'state' => 'required',
+            'city' => 'required',
+            'postcode' => 'required',
             'phone' => 'required',
-            'address' => 'required',
         ]);
 
 
@@ -74,11 +81,24 @@ class ProfileController extends Controller
           return Redirect::to('profile/create')->withErrors($validator)->withInput();
       }else {
         $profile = new profile;
-        $profile->phone          = Input::get('phone');
-        $profile->address       = Input::get('address');
-        $profile->id_user     = $user->id;
+        $profile->firstname      = Input::get('firstname');
+        $profile->lastname       = Input::get('lastname');
+        $profile->id_country = Input::get('country');
+        $profile->street = Input::get('street');
+        $profile->optionals = Input::get('optionals');
+        $profile->email    = Input::get('email');
+        $profile->city    = Input::get('city');
+        $profile->state    = Input::get('state');
+        $profile->postcode = Input::get('postcode');
+        $profile->phone   = Input::get('phone');
+        $profile->note = Input::get('note');
+
+        if (!empty($user->id)) {
+          $profile->id_user = $user->id;
+        }
+
         $profile->save();
-        return redirect('profile/management/')->with('message', 'You have done successfully');
+        return redirect('profile/detail/')->with('message', 'You have done successfully');
       }
 
     }
@@ -93,7 +113,7 @@ class ProfileController extends Controller
     {
 
         $user = Auth::user();
-        $profile = Profile::where('id_user', '=', $user->id)->first();
+        $profile = Profile::with('user')->where('id_user', '=', $user->id)->first();
         return view('profile.detail',compact('profile'));
 
     }
@@ -130,11 +150,10 @@ class ProfileController extends Controller
       if ($validator->fails()) {
           return Redirect::to('profile/edit')->withErrors($validator)->withInput();
       }else {
-        $profile = new profile;
+        $profile = Profile::where('id_user', '=', $user->id)->first();
         $profile->phone          = Input::get('phone');
         $profile->address       = Input::get('address');
-        $profile->id_user     = $user->id;
-        $profile->save();
+        $profile->update();
         return redirect('profile/detail')->with('message', 'You have done successfully');
       }
 

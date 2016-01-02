@@ -1,30 +1,40 @@
 @extends('template_admin.main')
 @section('content')
-<a href="{{ url('product/create') }}" class="btn btn-primary">add new transaction</a>
-<br><br>
 <table class="table table-striped table-bordered table-hover">
      <thead>
-     <tr class="bg-info">
-         <th>Id</th>
-         <th>code</th>
+     <tr>
+         <th>no</th>
+         <th>customer</th>
+         <th>email</th>
          <th>date</th>
-         <th>total price</th>
-         <th colspan="3">Actions</th>
+         <th>subtotal</th>
+         <th>shipping</th>
+         <th>total</th>
      </tr>
      </thead>
      <tbody>
+    <?php $index = 1; ?>
      @foreach ($transactions as $transaction)
          <tr>
-             <td>{{ $transaction->id }}</td>
-             <td>{{ $transaction->code }}</td>
-             <td>{{ $transaction->date }}</td>
-             <td>{{ $transaction->total }}</td>
+             <td>{{ $index }}</td>
              <td>
-               <a href="{{ url('transaction/delete/'.$transaction->id)  }}">
-                 <span class="glyphicon glyphicon-trash" aria-hidden="true"></span>
+               <a href="{{ url('transaction/detail/'.$transaction->id) }}">
+                 @foreach($transaction->user as $user)
+                    {{ $user->name }}
+                 @endforeach
                </a>
              </td>
+             <td>
+               @foreach($transaction->user as $user)
+                  {{ $user->email }}
+               @endforeach
+             </td>
+             <td>{{ $transaction->date }}</td>
+             <td>{{ $transaction->subtotal }}</td>
+              <td>{{ $transaction->shipping }}</td>
+               <td><strong>{{ $transaction->total }}</strong></td>
          </tr>
+           <?php $index++; ?>
      @endforeach
 
      </tbody>

@@ -8,27 +8,31 @@ use App\Http\Requests;
 use App\Http\Controllers\Controller;
 
 use App\Comment;
+use App\Product;
 
 use Input;
 use Validator;
 use Redirect;
 use Session;
+use Auth;
+
 
 class CommentController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function index()
-    {
-        //
-    }
+
+  public function __construct(){
+    $this->middleware('admin', ['management','destroy']);
+  }
 
     public function management(){
-      $comments = Comment::all();
-      return view('comment.management',compact('comments'));
+      if(Auth::user()){
+        $comments = Comment::with('product')->get();
+        $data['header'] = 'comment management';
+        return view('comment.management',compact('comments'), $data);
+      }else{
+        return redirect('/')->with('message', 'you must login to open this page');
+      }
+
     }
 
     /**
@@ -38,7 +42,11 @@ class CommentController extends Controller
      */
     public function create()
     {
+      if(Auth::user()){
         return view('comment.create');
+      }{
+        return redirect('/')->with('message', 'you must login to open this page');
+      }
     }
 
     /**
@@ -47,7 +55,7 @@ class CommentController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(Request $request, $id)
     {
 
 
@@ -59,17 +67,16 @@ class CommentController extends Controller
 
 
         if ($validator->fails()) {
-            return Redirect::to('comment/create')->withErrors($validator)->withInput();
+            return Redirect::to('product/detail/'.$id)->withErrors($validator)->withInput();
         }else {
           $comment = new Comment;
           $comment->name       = Input::get('name');
           $comment->email      = Input::get('email');
           $comment->comment    = Input::get('comment');
-          $comment->id_product = Input::get('id_product');
+          $comment->id_product = $id;
           $comment->save();
-          return redirect('comment/create')->with('message', 'You have done successfully');
+          return redirect('product/detail/'.$id)->with('message', 'You have done successfully');
         }
-
     }
 
     /**
@@ -117,7 +124,12 @@ class CommentController extends Controller
      */
     public function destroy($id)
     {
-        //
+      if(Auth::user()){
+      Comment::find($id)->delete();
+      return redirect('comment/management')->with('message', 'delete successfully');
+    }else{
+      return redirect('/')->with('message', 'you must login to open this page');
+    }
     }
 
 

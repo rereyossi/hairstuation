@@ -9,6 +9,7 @@ use App\Http\Requests;
 use App\Http\Controllers\Controller;
 
 use App\Image;
+use App\Product;
 
 use Input;
 use Validator;
@@ -16,16 +17,21 @@ use Image as Img;
 use File;
 use Redirect;
 use Session;
+use Auth;
+
 
 class ImageController extends Controller
 {
 
 
     public function upload($id=null){
-      $images = Image::orderBy('id', 'DESC')->get();
-      if(isset($id)):
-        return redirect('image/upload/'.$id);
+
+      if(!empty($id)):
+        $images = Image::where('id_product', '=', $id)->orderBy('id', 'DESC')->get();
+        $id_product = $id;
+        return view('image.upload', compact('images', 'id_product'));
       else:
+        $images = Image::orderBy('id', 'DESC')->get();
         return view('image.upload', compact('images'));
       endif;
     }
@@ -44,19 +50,14 @@ class ImageController extends Controller
 
     public function management()
     {
+      if(User::is_admin()){
       $images = Image::all();
       return view('image.management', compact('images'));
+    }else{
+      return redirect('/')->with('message', 'you must login to open this page');
+    }
     }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
-    }
 
     /**
      * Store a newly created resource in storage.
@@ -70,18 +71,26 @@ class ImageController extends Controller
 
         $validator = Validator::make($request->all(), [
               'file'  => 'required',
-              'title' => 'required',
+              // 'img_title' => 'required',
         ]);
 
         if ($validator->fails()) {
-          return Redirect::to('image/upload')->withInput()->withErrors($validator);
+          if (!empty($id)) {
+            return Redirect::to('product/create/'.$id)->withInput()->withErrors($validator);
+          }else{
+            return Redirect::to('image/upload/'.$id)->withInput()->withErrors($validator);
+          }
         }else{
           $file   = Input::file('file');
-          $title  = Input::get('title');
-          $desc   = Input::get('desc');
+          $title  = Input::get('img_title');
+          $desc   = Input::get('img_desc');
 
           if (!$file->isValid()) {
-            return redirect('image/upload')->with('warning', 'You have done fails');
+            if (!empty($id)) {
+                return redirect('product/create'.$id)->with('warning', 'You have done fails');
+            }else{
+                return redirect('image/upload')->with('warning', 'You have done fails');
+            }
           }else{
 
 
@@ -100,21 +109,34 @@ class ImageController extends Controller
 
             $file->move($path_original, $filename); // Move the original one first
 
-            Img::make($path_original.$filename)->resize(300, 9999)->save($path_medium.$filename);
-            Img::make($path_original.$filename)->resize(80, 80)->save($path_small.$filename);
+            Img::make($path_original.$filename)->resize(400,null,
+              function ($constraint) {
+                  $constraint->aspectRatio();
+              })->save($path_medium.$filename);
+              
+            Img::make($path_original.$filename)->resize(80, null,
+              function ($constraint) {
+                  $constraint->aspectRatio();
+              })->save($path_small.$filename);
 
 
             // save database
-            if (isset($id)) {
+
+            if (!empty($id)) {
               $images->id_product = $id;
             }
             $images->filename = $filename;
             $images->title = $title;
             $images->desc = $desc;
-            $images->path = 'public/uploads/images/';
+            $images->path = 'public/uploads/images/original/'.$filename;
             $images->save();
 
-            return redirect('image/upload')->with('message', 'You have done successfully');
+            if (!empty($id)) {
+              return redirect('product/create/'.$id)->with('message', 'image successfully');
+            }else{
+                return redirect('image/upload')->with('message', 'You have done successfully');
+            }
+
           }
         }
     }
@@ -130,33 +152,21 @@ class ImageController extends Controller
         //
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function edit($id)
-    {
-      $book=Book::find($id);
-       return view('books.edit',compact('book'));
-    }
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, $id)
+    public function setDisplay($id = null)
     {
-      $bookUpdate=Request::all();
-$book=Book::find($id);
-$book->update($bookUpdate);
-return redirect('books');
-    }
+      $image = Image::find($id);
+      $id_product = $image->id_product;
 
+      $image_rm = Image::where('id_product', '=', $id_product);
+      $image_rm->update(array('img_status'=>'gallery'));
+
+      $image_d = Image::find($id);
+      $image_d->img_status = 'display';
+      $image_d->save();
+      return redirect('product/create/'.$id_product)->with('message', 'You have done successfully');
+
+    }
     /**
      * Remove the specified resource from storage.
      *
@@ -166,11 +176,18 @@ return redirect('books');
     public function destroy($id)
     {
           $image = Image::find($id);
+          $id_product = $image->id_product;
+
+          $image = Image::find($id);
           File::delete('uploads/images/original/'.$image->filename);
           File::delete('uploads/images/medium/'.$image->filename);
           File::delete('uploads/images/small/'.$image->filename);
           $image->delete();
-          return redirect('image/upload')->with('message', 'delete successfully');
+          if(!empty($id_product)):
+            return redirect('product/create/'.$id_product)->with('message', 'delete successfully');
+          else:
+            return redirect('image/upload')->with('message', 'delete successfully');
+          endif;
 
     }
 }

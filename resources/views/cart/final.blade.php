@@ -1,0 +1,14 @@
+@extends('template_user.main')
+@section('content')
+<div class="row" id="checkout">
+      <div class="col-md-2"></div>
+      <div class="col-md-5">
+        @include('cart.profile-final')
+      </div>
+
+      <div class="col-md-3">
+          @include('cart.order-final')
+      </div>
+      <div class="col-md-2"></div>
+  </div>
+@stop

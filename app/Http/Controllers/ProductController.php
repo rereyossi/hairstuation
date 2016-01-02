@@ -9,8 +9,11 @@ use App\Http\Requests;
 use App\Http\Controllers\Controller;
 
 
-use App\Http\Controllers\ImageController as Img;
+use App\Http\Controllers\ImageController as Img_control;
 use App\Product;
+use App\Image as Img_model;
+use App\User;
+use File;
 
 use Input;
 use Validator;
@@ -18,8 +21,18 @@ use Redirect;
 use Session;
 use Auth;
 
+
+
+/*
+- create ProductController
+
+ */
 class ProductController extends Controller
 {
+
+    public function __construct(){
+      $this->middleware('admin', ['except' => ['grooming', 'index', 'show']]);
+    }
     /**
      * Display a listing of the resource.
      *
@@ -27,22 +40,32 @@ class ProductController extends Controller
      */
     public function index()
     {
-      $products = Product::all();
 
+      $products = Product::where('category', '=', 'styling')->with(['image' => function ($query) {
+          $query->where('img_status', '=', 'display');
+      }])->orderBy('id','desc')->get();
       return view('product.index',compact('products'));
 
     }
 
+    public function grooming(){
+      $products = Product::where('category', '=', 'grooming')->with(['image' => function ($query) {
+          $query->where('img_status', '=', 'display');
+      }])->orderBy('id','desc')->get();
+
+      return view('product.index',compact('products'));
+    }
+
+
     public function management()
     {
 
-      $user = Auth::user();
 
-      if (Auth::check()):
-        $products = Product::all();
-
-        return view('product.management',compact('products'));
-      endif;
+        $products = Product::with(['image' => function ($query) {
+            $query->where('img_status', '=', 'display');
+        }])->orderBy('id','desc')->get();
+        $data['header'] = 'product management';
+        return view('product.management',compact('products'), $data);
 
     }
 
@@ -53,12 +76,19 @@ class ProductController extends Controller
      */
     public function create($id=null)
     {
+      // if(Auth::user()){
       if (empty($id)) {
-        return view('product.create');
+        $data['header'] = 'new product';
+        return view('product.create',$data);
       }else{
-        $image = new Img;
-        $image->upload($id);
+        $product = Product::find($id);
+        $images = Img_model::where('id_product', '=', $id)->get();
+        $data['header'] = 'new product';
+        return view('product.create',compact('product', 'images'), $data);
       }
+    // }else{
+    //     return redirect('/')->with('message', 'you must login to open this page');
+    // }
     }
 
     /**
@@ -76,16 +106,29 @@ class ProductController extends Controller
 
 
       if ($validator->fails()) {
+        if (!empty($id)) {
+          return Redirect::to('product/create/'.$id)->withErrors($validator)->withInput();
+        }else{
           return Redirect::to('product/create')->withErrors($validator)->withInput();
+        }
       }else {
-        $product = new Product;
+        if (!empty($id)) {
+          $product = Product::find($id);
+        }else{
+          $product = new Product;
+        }
         $product->product_name       = Input::get('product_name');
         $product->desc                = Input::get('desc');
         $product->price               = Input::get('price');
-        $product->status               = Input::get('status');
-        $product->save();
-        $last_id = $product->id;
+        $product->category               = Input::get('category');
+          if (empty($id)) {
+            $product->save();
+            $last_id = $product->id;
 
+          }else{
+            $product->update();
+            $last_id = $id;
+          }
 
         return redirect('product/create/'.$last_id)->with('message', 'You have done successfully');
       }
@@ -102,32 +145,17 @@ class ProductController extends Controller
     public function show($id)
     {
 
-        $product = Product::find($id);
-        return view('product.detail',compact('product'));
+        $product = Product::with('image', 'comment')->find($id);
+
+        $relateds = Product::where('category', '=', $product->category)->with('image')->paginate(3);
+
+        $products = Product::find($product->id);
+        $products->count = $product->count+1;
+        $products->update();
+
+        return view('product.detail',compact('product', 'relateds'));
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function edit($id)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, $id)
-    {
-        //
-    }
 
     /**
      * Remove the specified resource from storage.
@@ -138,6 +166,13 @@ class ProductController extends Controller
     public function destroy($id)
     {
       Product::find($id)->delete();
+      $images = Img_model::where('id_product', '=', $id)->get();
+      foreach ($images as $key => $image) {
+        File::delete('uploads/images/original/'.$image->filename);
+        File::delete('uploads/images/medium/'.$image->filename);
+        File::delete('uploads/images/small/'.$image->filename);
+        Img_model::find($image->id)->delete();
+      }
       return redirect('product/management')->with('message', 'delete successfully');
     }
 }

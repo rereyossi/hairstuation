@@ -1,22 +1,21 @@
-@extends('template_admin.main')
-@section('content')
-
-<div class="row">
-  <div class="col-lg-12">
-
- @foreach ($comments as $comment)
-    <div class="" style="margin-bottom: 20px">
-      <div class="caption">
-        <h3>{{ $comment->name }}</h3>
-        <hr>
-        <p>{{ $comment->email }}</p>
-        <hr>
-        <p>{{ $comment->comment }}</p>
-      </div>
+@foreach ($product->comment as $comment)
+<div class="row" style="border-right:#FFFFFF groove thin;">
+<div class="col-md-4" id="avatar">
+    <img class="img-thumbnail" src="{{ url('img/HSfavicon.png') }}"  alt="Mr Active Styling Glue" height="64" width="64">
   </div>
- @endforeach
+  <div class="col-md-8">
+    <div id="rate">
+      <span class="glyphicon glyphicon-star"></span>
+      <span class="glyphicon glyphicon-star"></span>
+      <span class="glyphicon glyphicon-star"></span>
+      <span class="glyphicon glyphicon-star"></span>
+      <span class="glyphicon glyphicon-star-empty"></span>
+      </div>
 
+      <div id="komen">
+      <h5 style="color:#f7941d;">{{ $comment->name }}</h5>
+      <p>{{ $comment->comment }}</p>
+    </div>
   </div>
 </div>
-
-@stop
+@endforeach

@@ -28,7 +28,8 @@ return [
     |
     */
 
-    'host' => env('MAIL_HOST', 'smtp.mailgun.org'),
+    // 'host' => env('MAIL_HOST', 'smtp.mailgun.org'),
+    'host' => env('MAIL_HOST', 'smtp.gmail.com'),
 
     /*
     |--------------------------------------------------------------------------
@@ -54,7 +55,8 @@ return [
     |
     */
 
-    'from' => ['address' => null, 'name' => null],
+    // 'from' => ['address' => null, 'name' => null],
+    'from' => ['address' => 'reavinci@gmail.com', 'name' => 'hairstuation'],
 
     /*
     |--------------------------------------------------------------------------
@@ -80,7 +82,7 @@ return [
     |
     */
 
-    'username' => env('MAIL_USERNAME'),
+    'username' => env('sir reavinci'),
 
     /*
     |--------------------------------------------------------------------------
@@ -93,7 +95,8 @@ return [
     |
     */
 
-    'password' => env('MAIL_PASSWORD'),
+    // 'password' => env('MAIL_PASSWORD'),
+    'password' => env('Rahasia45/'),
 
     /*
     |--------------------------------------------------------------------------

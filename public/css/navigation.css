@@ -1,0 +1,35 @@
+/* NAVIGATION.CSS */
+
+ul#nav { /* utk navigasi paling atas */ 
+	margin-top:0px;
+	padding-top:10px;
+	}
+
+ul#nav li {
+		float: left;
+		text-indent: 27px;
+		list-style-type: none; 
+		height:50px;
+		}
+
+ul#nav li a {
+		color:#FFF;
+		font-size: 14px;
+		font-weight:bold;
+		display: block;
+		text-decoration: none;
+	}
+
+ul#nav li a:hover, ul#nav li a:focus 	{
+	color: #f7941d;
+	}
+	
+ul#nav li a.selected1 	{ 
+	color: #f7941d;
+	}
+	
+ul#navstat{
+	padding-top:10px;
+	list-style-type: none; 
+	text-decoration: none;
+	}
