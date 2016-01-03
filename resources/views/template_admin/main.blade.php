@@ -2,8 +2,9 @@
 <html lang="en">
     <head>
         <title>admin dashboard</title>
-        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
-        <script type="text/javascript" src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+        <script src="{{ url('js/jquery.min.js') }}"></script>
+        <script src="{{ url('js/angular.min.js') }}"></script>
+        <link rel="stylesheet" href="{{ url('bootstrap/css/bootstrap.min.css') }}" media="screen" title="no title" charset="utf-8">
     </head>
         <body>
 

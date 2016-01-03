@@ -4,6 +4,7 @@
      <thead>
      <tr>
          <th>no</th>
+         <th>code</th>
          <th>customer</th>
          <th>email</th>
          <th>date</th>
@@ -17,6 +18,7 @@
      @foreach ($transactions as $transaction)
          <tr>
              <td>{{ $index }}</td>
+             <td>{{ $transaction->code }}</td>
              <td>
                <a href="{{ url('transaction/detail/'.$transaction->id) }}">
                  @foreach($transaction->user as $user)

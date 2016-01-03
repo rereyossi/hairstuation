@@ -19,9 +19,9 @@ use Cart;
 class ProfileController extends Controller
 {
 
-    public function _construct(){
-      $user = Auth::user();
-    }
+  public function __construct(){
+    $this->middleware('admin', ['except' => ['store']]);
+  }
 
     /**
      * Display a listing of the resource.

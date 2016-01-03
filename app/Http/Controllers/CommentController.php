@@ -21,7 +21,7 @@ class CommentController extends Controller
 {
 
   public function __construct(){
-    $this->middleware('admin', ['management','destroy']);
+    $this->middleware('admin', ['except' => ['create', 'store', 'show']]);
   }
 
     public function management(){
@@ -73,6 +73,7 @@ class CommentController extends Controller
           $comment->name       = Input::get('name');
           $comment->email      = Input::get('email');
           $comment->comment    = Input::get('comment');
+          $comment->rating    = Input::get('rating');
           $comment->id_product = $id;
           $comment->save();
           return redirect('product/detail/'.$id)->with('message', 'You have done successfully');

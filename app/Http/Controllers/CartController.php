@@ -23,6 +23,7 @@ use Redirect;
 use Cart;
 use Auth;
 use DB;
+use Mail;
 
 
 
@@ -30,6 +31,7 @@ use DB;
 
 class cartController extends Controller
 {
+
 
 
     /**
@@ -223,6 +225,8 @@ class cartController extends Controller
       $transaction = Transaction::with('user')->where('id', '=', $id)->first();
       $products = Transaction::get_product($id);
       $profile = Profile::where('id_user', '=', $id_user)->first();
+      $transac = new Transac();
+      $transac->send_order($id);
 
       return view('cart.final', compact('profile', 'transaction', 'products'));
     }

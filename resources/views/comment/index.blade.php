@@ -5,11 +5,13 @@
   </div>
   <div class="col-md-8">
     <div id="rate">
+      <?php $rating = $comment->rating; ?>
+      @for ($i=0; $i < $rating; $i++)
       <span class="glyphicon glyphicon-star"></span>
-      <span class="glyphicon glyphicon-star"></span>
-      <span class="glyphicon glyphicon-star"></span>
-      <span class="glyphicon glyphicon-star"></span>
+      @endfor
+      @for ($i=0; $i < 5-$rating; $i++)
       <span class="glyphicon glyphicon-star-empty"></span>
+      @endfor
       </div>
 
       <div id="komen">

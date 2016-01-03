@@ -22,6 +22,7 @@
     <span class="glyphicon glyphicon-star"></span>
     <span class="glyphicon glyphicon-star-empty"></span>
 </div>
+<input type="hidden" name="rating" value="3">
 <div class="input-group">
   <label for="comment">Comment:</label>
 <textarea name="comment" class="form-control" rows="5" cols="30" id="comment"></textarea>

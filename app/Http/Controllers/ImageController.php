@@ -22,8 +22,7 @@ use Auth;
 
 class ImageController extends Controller
 {
-
-
+  
     public function upload($id=null){
 
       if(!empty($id)):
@@ -113,7 +112,7 @@ class ImageController extends Controller
               function ($constraint) {
                   $constraint->aspectRatio();
               })->save($path_medium.$filename);
-              
+
             Img::make($path_original.$filename)->resize(80, null,
               function ($constraint) {
                   $constraint->aspectRatio();

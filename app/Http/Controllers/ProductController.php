@@ -44,7 +44,8 @@ class ProductController extends Controller
       $products = Product::where('category', '=', 'styling')->with(['image' => function ($query) {
           $query->where('img_status', '=', 'display');
       }])->orderBy('id','desc')->get();
-      return view('product.index',compact('products'));
+      $data['header'] = 'styling product';
+      return view('product.index',compact('products'), $data);
 
     }
 
@@ -52,8 +53,8 @@ class ProductController extends Controller
       $products = Product::where('category', '=', 'grooming')->with(['image' => function ($query) {
           $query->where('img_status', '=', 'display');
       }])->orderBy('id','desc')->get();
-
-      return view('product.index',compact('products'));
+      $data['header'] = 'grooming product';
+      return view('product.index',compact('products'), $data);
     }
 
 
@@ -65,9 +66,12 @@ class ProductController extends Controller
             $query->where('img_status', '=', 'display');
         }])->orderBy('id','desc')->get();
         $data['header'] = 'product management';
+
         return view('product.management',compact('products'), $data);
 
     }
+
+
 
     /**
      * Show the form for creating a new resource.
@@ -76,7 +80,6 @@ class ProductController extends Controller
      */
     public function create($id=null)
     {
-      // if(Auth::user()){
       if (empty($id)) {
         $data['header'] = 'new product';
         return view('product.create',$data);
@@ -86,9 +89,6 @@ class ProductController extends Controller
         $data['header'] = 'new product';
         return view('product.create',compact('product', 'images'), $data);
       }
-    // }else{
-    //     return redirect('/')->with('message', 'you must login to open this page');
-    // }
     }
 
     /**
@@ -102,6 +102,7 @@ class ProductController extends Controller
 
       $validator = Validator::make($request->all(), [
             'product_name' => 'required',
+            'price' => 'required',
         ]);
 
 
@@ -146,26 +147,31 @@ class ProductController extends Controller
     {
 
         $product = Product::with('image', 'comment')->find($id);
+        $pcount = $product->count + 1;
+
+        if($pcount <= 10):
+          $rating= 1;
+          elseif($pcount > 10 && $pcount <=20):
+            $rating= 2;
+            elseif($pcount > 20 && $pcount <=30):
+              $rating= 3;
+              elseif($pcount > 30 && $pcount <=40):
+                $rating= 4;
+                elseif($pcount > 40):
+                  $rating= 5;
+                  endif;
 
         $relateds = Product::where('category', '=', $product->category)->with('image')->paginate(3);
 
+
         $products = Product::find($product->id);
         $products->count = $product->count+1;
+        $products->rating = $rating;
         $products->update();
 
-        foreach($relateds as $value):
-          if($value->count < 10):
-            $data['star'][]= 1;
-          elseif($value->count > 10 && $value->count <20):
-            $data['star'][]= 2;
-            elseif($value->count > 20 && $value->count <30):
-              $data['star'][]= 3;
-              elseif($value->count > 30 && $value->count <40):
-                $data['star'][]= 4;
-                elseif($value->count > 40):
-                  $data['star'][]= 5;
-                endif;
-        endforeach;
+
+
+
 
         return view('product.detail',compact('product', 'relateds'));
     }

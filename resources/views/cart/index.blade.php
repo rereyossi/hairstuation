@@ -44,9 +44,9 @@
 
                     </td>
                     <td>
-                    	<span class="counting glyphicon glyphicon-minus"></span>
+                    	<span class="counting count_minus glyphicon glyphicon-minus"></span>
                       <span class="qty">{{ $row->qty }}</span>
-                      <span class="counting glyphicon glyphicon-plus"></span>
+                      <span class="counting count_plus glyphicon glyphicon-plus"></span>
                       <input type="hidden" name="{{ 'qty_'.$index }}" value="<?php echo $row->qty?>">
                     </td>
                     <td>$<?php echo $row->subtotal;?></td>
@@ -116,4 +116,11 @@
       cursor: pointer;
     }
   </style>
+  <script>
+    $(document).ready(function() {
+      function plus(){
+        var get_plus =
+      }
+    });
+  </script>
 @stop

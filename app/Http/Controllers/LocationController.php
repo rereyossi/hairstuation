@@ -37,7 +37,7 @@ class LocationController extends Controller
     public function management()
     {
         $locations = Location::all();
-        $data['header'] = 'location management';
+        $data['header'] = 'shipping locations';
         return view('location.management',compact('locations'), $data);
     }
 

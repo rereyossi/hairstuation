@@ -26,9 +26,9 @@ use DB;
 class TransactionController extends Controller
 {
 
-  // public function __construct(){
-  //   $this->middleware('admin', ['management', 'create', 'store', 'edit', 'update', 'destroy']);
-  // }
+  public function __construct(){
+    $this->middleware('admin', ['except' => ['send_order', 'send_mail', 'subscribe']]);
+  }
 
 
     public function management(){
@@ -60,17 +60,6 @@ class TransactionController extends Controller
       return view('transaction.detail',compact('transaction', 'products', 'profile'), $data);
     }
 
-    public function get_subs(){
-
-    }
-
-    public function c_get_subs($id_transaction, $subs){
-      $product = Transaction::get_subs($id_transaction, $subs);
-      foreach($product as $pro):
-        echo $pro->product_name.'=='.$pro->subsribe.'<br>';
-      endforeach;
-    }
-
 
     public function subscribe(){
         $date = date('d');
@@ -93,13 +82,13 @@ class TransactionController extends Controller
     public function send_mail()
     {
       $sent = Mail::send('email.tes_mail', array('key' => 'value'), function($message)
-  {
-      $message->from('reavinci@gmail.com');
-      $message->to('rereyossi@gmail.com', 'John Smith')->subject('Welcome!');
-  });
+      {
+          $message->from('reavinci@gmail.com');
+          $message->to('rereyossi@gmail.com', 'John Smith')->subject('tes kirim order!');
+      });
 
-  if( ! $sent) dd("something wrong");
-  dd("send");
+      if( ! $sent) dd("something wrong");
+      dd("send order");
 
 
     }
@@ -107,22 +96,25 @@ class TransactionController extends Controller
 
     public function send_order($id){
 
-      // $order = Transaction::get_order($id);
-      // $id_product = $order->id_product;
-      // $id_user = $order->id_user;
-      //
-      //
-      // $transaction = Transaction::where('id', '=', $id)->with(['user' => function ($query) {
-      //     $query->first();
-      // }])->first();
-      // $products = Transaction::get_product($id);
-      // $profile = Profile::where('id_user', '=', $id_user)->first();
-      //
-      // $sent = Mail::send('email.send_order', compact('transaction', 'products', 'profile'), function($message)
-      // {
-      //     $message->from('reavinci@gmail.com');
-      //     $message->to('rereyossi@gmail.com', 'John Smith')->subject('Welcome!');
-      // });
+      $order = Transaction::get_order($id);
+      $id_product = $order->id_product;
+      $id_user = $order->id_user;
+
+
+      $transaction = Transaction::where('id', '=', $id)->with('user')->first();
+      $products = Transaction::get_product($id);
+      $profile = Profile::where('id_user', '=', $id_user)->first();
+
+
+      $data = array(
+        'email' => $profile->email,
+        'from' => 'hallo@hairstuation.com',
+        'name' => $profile->firstname.' '.$profile->lastname,
+      );
+      Mail::send( 'email.send_order', compact('transaction', 'products', 'profile'), function( $message ) use ($data)
+      {
+          $message->to( $data['email'] )->from( $data['from'], $data['name'] )->subject( 'hairstuation.com: order product' );
+      });
 
     }
 }

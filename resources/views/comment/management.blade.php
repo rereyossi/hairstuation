@@ -6,6 +6,7 @@
          <th>no</th>
          <th>name</th>
          <th>email</th>
+         <th>rating</th>
          <th>comment</th>
          <th>product</th>
          <th colspan="3">Actions</th>
@@ -18,6 +19,7 @@
              <td>{{ $index }}</td>
              <td>{{ $comment->name }}</td>
              <td>{{ $comment->email }}</td>
+             <td>{{ $comment->rating }}</td>
              <td>{{ $comment->comment }}</td>
              <td>
                <a href="{{ url('product/detail/'.$comment->product->id) }}">

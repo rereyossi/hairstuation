@@ -9,23 +9,18 @@
     <meta name="description" content="Hair Situation products are for the man that understands that his grooming and appearance are vital to his professional and personal success.">
     <meta name="keywords" content="hair, situation, hair situation, hair situation products, mens hair products">
 
-    <title>Hair Situation&reg &raquo; Home</title>
-      <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
-    <!-- Latest compiled and minified CSS -->
-<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
+    <title>Hair Situation&reg &raquo;
+    @if(!empty($header))
+      {{ $header}}
+    @endif
+    </title>
 
-<!-- Optional theme -->
-<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap-theme.min.css" integrity="sha384-fLW2N01lMqjakBkx3l/M9EahuwpSfeNvV63J5ezn3uZzapT0u7EYsXMjQV+0En5r" crossorigin="anonymous">
-
-<!-- Latest compiled and minified JavaScript -->
-<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js" integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS" crossorigin="anonymous"></script>
-    <!-- Bootstrap -->
     <link href="{{ url('bootstrap/css/bootstrap.min.css') }}" rel="stylesheet">
     <!-- Bootstrap -->
     <link rel="stylesheet" href="{{ url('css/styles.css') }}" type="text/css" media="all" />
-	<link rel="shortcut icon" href="{{ url('images/HSfavicon.ico') }}">
+  	<link rel="shortcut icon" href="{{ url('images/HSfavicon.ico') }}">
 
-    <script src="{{ url('bootstrap/js/jquery.min.js') }}"></script>
+    <script src="{{ url('js/jquery.min.js') }}"></script>
     <script src="{{ url('bootstrap/js/bootstrap.min.js') }}"></script>
 
     <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->

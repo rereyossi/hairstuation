@@ -123,7 +123,7 @@
      @foreach ($products as $product)
          <tr>
              <td>{{ $index }}</td>
-             <td>{{ $product->product_name }}</td>
+             <td><a href="{{ url('product/detail/'.$product->id) }}">{{ $product->product_name }}</a></td>
              <td>{{ $product->desc }}</td>
              <td>{{ $product->price }}</td>
              <td>

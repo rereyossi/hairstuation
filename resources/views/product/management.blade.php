@@ -9,6 +9,7 @@
          <th>display</th>
          <th>product name</th>
          <th>description</th>
+         <th>rating</th>
          <th>price</th>
          <th>category</th>
          <th colspan="3">Actions</th>
@@ -26,6 +27,7 @@
              </td>
              <td>{{ $product->product_name }}</td>
              <td>{{ $product->desc }}</td>
+             <td>{{ $product->rating }}</td>
              <td>{{ $product->price }}</td>
              <td>{{ $product->category }}</td>
              <td>
