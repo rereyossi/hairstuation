@@ -8,9 +8,9 @@
          <th>customer</th>
          <th>email</th>
          <th>date</th>
-         <th>subtotal</th>
-         <th>shipping</th>
-         <th>total</th>
+         <th>subtotal ($)</th>
+         <th>shipping ($)</th>
+         <th>total ($)</th>
      </tr>
      </thead>
      <tbody>
@@ -26,10 +26,12 @@
                   {{ $user->email }}
                @endforeach
              </td>
-             <td>{{ $transaction->date }}</td>
-             <td>{{ '$'.$transaction->subtotal }}</td>
-             <td>{{ '$'.$transaction->shipping }}</td>
-             <td class="success"><strong>{{ '$'.$transaction->total }}</strong></td>
+             <td>
+               <?php echo date( 'm-d-20y', strtotime($transaction->date)); ?>
+             </td>
+             <td>{{ $transaction->subtotal }}</td>
+             <td>{{ $transaction->shipping }}</td>
+             <td class="success"><strong>{{ $transaction->total }}</strong></td>
              </td>
          </tr>
      </tbody>
@@ -51,11 +53,6 @@
  <td>{{ $profile->lastname }}</td>
 </tr>
 
-<tr>
- <td>country</td>
- <td></td>
- <td>{{ $profile->country }}</td>
-</tr>
 
 <tr>
  <td>Street Address)</td>
@@ -114,10 +111,11 @@
          <th>No</th>
          <th>product name</th>
          <th>description</th>
-         <th>price</th>
+         <th>price ($)</th>
+         <th>discount</th>
          <th>quantity</th>
          <th>subsribe</th>
-         <th>subtotal</th>
+         <th>subtotal ($)</th>
      </tr>
      </thead>
      <tbody>
@@ -127,7 +125,14 @@
              <td>{{ $index }}</td>
              <td>{{ $product->product_name }}</td>
              <td>{{ $product->desc }}</td>
-             <td>{{ '$'.$product->price }}</td>
+             <td>{{ $product->price }}</td>
+             <td>
+               @if($product->subsribe == 0)
+                 {{ '0%' }}
+               @else
+                 {{ '15%' }}
+               @endif
+             </td>
              <th>{{ $product->qty }}</th>
              <td>
                @if($product->subsribe == 0)
@@ -136,7 +141,7 @@
                  {{ $product->subsribe.' mount' }}
                @endif
              </td>
-             <th>{{ '$'.$product->subtotal }}</th>
+             <th>{{ $product->subtotal }}</th>
          </tr>
            <?php $index++ ?>
      @endforeach

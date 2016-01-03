@@ -7,8 +7,21 @@ use Illuminate\Http\Request;
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
 
+
+
+use App\Group;
+use App\User;
+use Input;
+use Validator;
+use Redirect;
+use Session;
+use Auth;
+
+
 class GroupController extends Controller
 {
+
+
     /**
      * Display a listing of the resource.
      *
@@ -16,7 +29,8 @@ class GroupController extends Controller
      */
     public function index()
     {
-        //
+      $profiles = Group::with('user')->find(1)->toJson();
+      var_dump($profiles);
     }
 
     /**
@@ -26,7 +40,12 @@ class GroupController extends Controller
      */
     public function create()
     {
-        //
+      $user = User::find(4);
+      $data = array(
+                'phone' => '08523000',
+                'address' => 'alamat baru'
+              );
+      $user->group()->attach(4, $data);
     }
 
     /**

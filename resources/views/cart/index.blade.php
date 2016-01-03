@@ -30,17 +30,24 @@
                       <?php
                       $filename =  $row->options->img;
                        ?>
-                        <?php if($row->options->has('subs')): ?>
+                        <?php if($row->options->has('img')): ?>
                           <img src="{{ url('uploads/images/small/'.$filename) }}" alt="{{ $filename}}" />
                         <?php endif; ?>
                     </td>
                 	<td><strong><?php echo $row->name;?></strong></td>
-                    <td>$<?php echo $row->price;?></td>
                     <td>
-                    	<!-- <span class="glyphicon glyphicon-minus"></span>
+                      {{ '$'.$row->options->old_price }}
+                      @if($row->options->subs > 0)
+                      <br>
+                      <span style="color: #F7941D;">15%</span>
+                      @endif
 
-                      <span class="glyphicon glyphicon-plus"></span> -->
-                      <input class="form-control" type="text" name="{{ 'qty_'.$index }}" value="<?php echo $row->qty?>">
+                    </td>
+                    <td>
+                    	<span class="counting glyphicon glyphicon-minus"></span>
+                      <span class="qty">{{ $row->qty }}</span>
+                      <span class="counting glyphicon glyphicon-plus"></span>
+                      <input type="hidden" name="{{ 'qty_'.$index }}" value="<?php echo $row->qty?>">
                     </td>
                     <td>$<?php echo $row->subtotal;?></td>
                 </tr>
@@ -48,22 +55,16 @@
                 <tr id="sublist">
                 	<td colspan="4">
                     	<h6>Auto-Replenish: This item will ship now and deliver every
-                        <span style="color:#f7941d;">
+                        <span class="counting glyphicon glyphicon-minus"></span>
+                        <span class ="subs" style="color:#f7941d;">
                           <?php echo $row->options->subs.' month(s).'; ?>
                         </span>
-                        <select class="form-control" name="{{ 'subs_'.$index }}">
-                          @for($i=1; $i < 7; $i++)
-                            @if($i == $row->options->subs)
-                              <option value="{{ $i }}" selected>{{ $i }}</option>
-                            @else
-                              <option value="{{ $i }}">{{ $i }}</option>
-                            @endif
-                          @endfor
-                        </select>
+                        <span class="counting glyphicon glyphicon-plus"></span>
+                        <input type="hidden" name="{{ 'subs_'.$index }}" value="{{ $row->options->subs  }}">
                       </h6>
                     </td>
-                    <td><a><h5>Modify</h5></a></td>
-                    <td><a><h5>Remove</h5></a></td>
+                    <!-- <td><a><h5>Modify</h5></a></td>
+                    <td><a><h5>Remove</h5></a></td> -->
                 </tr>
               <?php endif; ?>
 
@@ -93,7 +94,7 @@
               </em></span>
             </li>
 
-        	<li class="list-group-item">
+        	   <li class="list-group-item">
               <strong>TOTAL</strong>
             </li>
             <li class="list-group-item" style="color:#f7941d; text-align:right">
@@ -110,4 +111,9 @@
       <div class="col-md-2"></div>
     </div>
   </form>
+  <style media="screen">
+    .counting{
+      cursor: pointer;
+    }
+  </style>
 @stop

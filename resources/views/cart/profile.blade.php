@@ -12,13 +12,7 @@
       </div>
   </div>
   <span>&nbsp;</span>
-  <div class="form-group">
-    <select id="location" name="country" class="form-control" placeholder="Send product from" aria-describedby="basic-addon1">
-      <option class="location1" value="location1" selected="selected" >location 1</option>
-      <option class="location2" value="location2" >location 2</option>
-    </select>
-  </div>
-  <select id="country" name="country" class="form-control" placeholder="Send product to country" aria-describedby="basic-addon1">
+  <select name="state" class="form-control" placeholder="state" aria-describedby="basic-addon1">
 
     @foreach($locations as $location)
       <option value="{{ $location->country }}">{{ $location->country }}</option>
@@ -37,9 +31,6 @@
   <div class="row">
     <div class="col-md-6">
         <input name="optionals" class="form-control" placeholder="Appartement, Office, Etc (Optional)" aria-describedby="basic-addon1" type="text">
-      </div>
-      <div class="col-md-6">
-        <input name="state" class="form-control" placeholder="State / Country" aria-describedby="basic-addon1" type="text">
       </div>
   </div>
   <div class="row">
@@ -62,9 +53,9 @@
   <textarea class="form-control" rows="5" cols="70" id="comment"></textarea>
   </div>
 
-  <input type="hidden" class="shipping" name="shipping" value="">
+  <input type="hidden" class="shipping" name="shipping" value="{{ $shipping }}">
   <div class="form-grup" style="margin-top: 20px;">
-      <button type="submit" name="save" class="btn btn-default">save</button>
+      <button type="submit" name="save" class="btn btn-default">PLACE ORDER</button>
   </div>
 
 

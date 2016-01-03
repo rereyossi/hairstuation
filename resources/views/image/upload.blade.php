@@ -1,8 +1,14 @@
 
 @extends('template_admin.main')
 @section('content')
-
-<form  method="POST" action="{{ url('image/save') }}" enctype="multipart/form-data">
+<?php
+  if(!empty($id_product)){
+    $id_pro = $id_product;
+  }else{
+    $id_pro = '';
+  }
+ ?>
+<form  method="POST" action="{{ url('image/save/'.$id_pro) }}" enctype="multipart/form-data">
   {!! csrf_field() !!}
 <div class="form-group">
   <input type="file" name="file" id="fileToUpload">
@@ -10,12 +16,12 @@
 
 <div class="form-group">
   <label for="">title</label>
-  <input type="text" name="title" value="" class="form-control">
+  <input type="text" name="img_title" value="" class="form-control">
 </div>
 
 <div class="form-group">
   <label for="">description</label>
-  <textarea name="desc" rows="8" cols="40" class="form-control"></textarea>
+  <textarea name="img_desc" rows="8" cols="40" class="form-control"></textarea>
 </div>
 
 <div class="form-group">

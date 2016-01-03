@@ -15,7 +15,7 @@
      @foreach ($images as $image)
          <tr>
             <td><?php echo $index ?></td>
-            <td><img src="{{ url('public/uploads/images/small/'.$image->filename) }}" alt="" /></td>
+            <td><img src="{{ url('uploads/images/small/'.$image->filename) }}" alt="{{ $image->filename }}" /></td>
             <td>{{ $image->title }}</td>
             <td>{{ $image->desc }}</td>
             <td>

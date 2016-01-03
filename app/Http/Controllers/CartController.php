@@ -44,7 +44,7 @@ class cartController extends Controller
       if ($count == 1) {
         $data['cost'] = 5;
       }else{
-        $data['cost'] = (2*$count)+5;
+        $data['cost'] = (2*($count-1))+5;
       }
       return view('cart.index',compact('cart'), $data);
     }
@@ -61,12 +61,14 @@ class cartController extends Controller
       $qty = Input::get('qty');
       $subs = Input::get('subs');
       if ($subs > 0) {
-        $price = (15*$product->price)/100;
+        $price = $product->price - (15/100*$product->price);
       } else {
-        $price = $product->price;
+        $price = $product->price*$qty;
       }
 
       $img = Input::get('img');
+
+
 
 
         $data = array(
@@ -77,6 +79,7 @@ class cartController extends Controller
           'options'      => array(
                               'subs'  => $subs,
                               'img'  => $img,
+                              'old_price' => $product->price,
                             ),
          );
 
@@ -94,11 +97,20 @@ class cartController extends Controller
     public function billing()
     {
       $cart = Cart::content();
-      $locations = Location::whereNull('id_parent')->get();
-      if (is_null($cart)) {
+      $count = count($cart);
+      $locations = Location::get();
+
+      // get shipping
+      if ($count == 1) {
+        $data['shipping'] = 5;
+      }else{
+        $data['shipping'] = (2*($count-1))+5;
+      }
+
+      if ($count < 1) {
         return redirect('cart/view')->with('message', 'cart is empty');
       }else{
-          return view('cart.billing', compact('cart', 'locations'));
+          return view('cart.billing', compact('cart', 'locations'), $data);
       }
 
     }
@@ -108,7 +120,7 @@ class cartController extends Controller
       $validator = Validator::make($request->all(), [
             'firstname' => 'required',
             'lastname' => 'required',
-            'country' => 'required',
+            // 'country' => 'required',
             'street' => 'required',
             'email' => 'required',
             'city' => 'required',
@@ -116,15 +128,15 @@ class cartController extends Controller
             'city' => 'required',
             'postcode' => 'required',
             'phone' => 'required',
-            // 'shipping' => 'required',
+            'shipping' => 'required',
         ]);
 
 
       if ($validator->fails()) {
           return Redirect::to('cart/billing')->withErrors($validator)->withInput();
       }else {
-
-        $formid       = str_random();
+        $count        = Transaction::all()->count();
+        $formid       = 'hr'.($count+1).'-'.date('m').date('Y');
         $cart_content = Cart::content();
         $get_subtotal = Cart::total();
         $get_shipping = Input::get('shipping');
@@ -132,7 +144,7 @@ class cartController extends Controller
 
         // #save transaction
         $transaction  = new Transaction();
-        $transaction->date       = date('Y-m-d H:i:s');
+        $transaction->date       = date('Y-m-d');
         $transaction->code       = $formid;
         $transaction->subtotal  = $get_subtotal;
         $transaction->shipping   = $get_shipping;
@@ -233,7 +245,7 @@ class cartController extends Controller
         $qty = Input::get('qty_'.$index);
         $subs = Input::get('subs_'.$index);
         if($subs > 0){
-            $price = (15*$cart->price)/100;
+            $price = $cart->price - (15/100*$cart->price);
         }else{
             $price = $cart->price;
         }

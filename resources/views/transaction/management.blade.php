@@ -7,9 +7,9 @@
          <th>customer</th>
          <th>email</th>
          <th>date</th>
-         <th>subtotal</th>
-         <th>shipping</th>
-         <th>total</th>
+         <th>subtotal ($)</th>
+         <th>shipping ($)</th>
+         <th>total ($)</th>
      </tr>
      </thead>
      <tbody>
@@ -29,7 +29,7 @@
                   {{ $user->email }}
                @endforeach
              </td>
-             <td>{{ $transaction->date }}</td>
+             <td>{{ date( 'm-d-20y', strtotime($transaction->date)) }}</td>
              <td>{{ $transaction->subtotal }}</td>
               <td>{{ $transaction->shipping }}</td>
                <td><strong>{{ $transaction->total }}</strong></td>

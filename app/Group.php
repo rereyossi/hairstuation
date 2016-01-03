@@ -9,6 +9,6 @@ class Group extends Model
       protected $table = 'group_users';
 
       public function User(){
-         return $this->hasMany('App\User');
+         return $this->belongsToMany('App\User', 'pivot_users', 'id_group', 'id_user');
      }
 }

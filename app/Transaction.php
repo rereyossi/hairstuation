@@ -34,7 +34,7 @@ class transaction extends Model
         $order = DB::table('order')
                 ->where('id_transaction', '=', $id)
                 ->select('id', 'id_transaction', 'id_product', 'id_user')
-                ->get()[0];
+                ->first();
 
         return $order;
     }
@@ -47,7 +47,15 @@ class transaction extends Model
 
         return $product;
     }
+    public static function get_subs($id, $subs = null){
+        $product = DB::table('order')
+                ->join('products', 'order.id_product', '=', 'products.id')
+                ->where('id_transaction', '=', $id)
+                // ->where('subsribe', '=', $subs)
+                ->get();
 
+        return $product;
+    }
     public function user()
     {
       return $this->belongsToMany('App\User', 'order', 'id_transaction', 'id_user');

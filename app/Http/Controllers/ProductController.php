@@ -153,6 +153,20 @@ class ProductController extends Controller
         $products->count = $product->count+1;
         $products->update();
 
+        foreach($relateds as $value):
+          if($value->count < 10):
+            $data['star'][]= 1;
+          elseif($value->count > 10 && $value->count <20):
+            $data['star'][]= 2;
+            elseif($value->count > 20 && $value->count <30):
+              $data['star'][]= 3;
+              elseif($value->count > 30 && $value->count <40):
+                $data['star'][]= 4;
+                elseif($value->count > 40):
+                  $data['star'][]= 5;
+                endif;
+        endforeach;
+
         return view('product.detail',compact('product', 'relateds'));
     }
 

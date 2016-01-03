@@ -15,11 +15,6 @@
         <td>{{ $profile->lastname }}</td>
       </tr>
 
-      <tr>
-        <td>country<td>
-        <td></td>
-        <td>{{ $profile->country }}</td>
-      </tr>
 
       <tr>
         <td>Street Address)<td>

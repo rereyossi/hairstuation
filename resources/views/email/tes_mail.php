@@ -1,1 +1,1 @@
-Anda mendapatkan hadiah {{ $total }} buah {{ $prize }}
+Anda mendapatkan hadiah 
