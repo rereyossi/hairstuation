@@ -1,4 +1,5 @@
 
+<script src="{{ url('bootstrap-rating-master/bootstrap-rating.min.js') }}"></script>
 <form  method="POST"  action="{{ url('comment/save/'.$product->id) }}">
   {!! csrf_field() !!}
 
@@ -15,14 +16,10 @@
 <input name="email" class="form-control" placeholder="Your Email" aria-describedby="basic-addon1" type="email">
 </div>
 <span>&nbsp;</span>
-<div id="rate">
-    <span class="glyphicon glyphicon-star"></span>
-    <span class="glyphicon glyphicon-star"></span>
-    <span class="glyphicon glyphicon-star"></span>
-    <span class="glyphicon glyphicon-star"></span>
-    <span class="glyphicon glyphicon-star-empty"></span>
+<div id="rate" style="cursor: pointer;">
+    <input type="hidden" class="rating"/>
 </div>
-<input type="hidden" name="rating" value="3">
+<input id="rating" type="hidden" name="rating" value="1">
 <div class="input-group">
   <label for="comment">Comment:</label>
 <textarea name="comment" class="form-control" rows="5" cols="30" id="comment"></textarea>
@@ -36,3 +33,11 @@
 </div>
 
 </form>
+<script>
+  jQuery(document).ready(function($) {
+    $('.rating').on('change', function () {
+      var nilai = $(this).val();
+      $('#rating').val(nilai);
+    });
+  });
+</script>
