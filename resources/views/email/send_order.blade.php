@@ -1,113 +1,114 @@
 @extends('template_email.main')
 @section('content')
-<h2>tr style="border: 1px solid rgb(225, 225, 225);"ansaction</h2>
-<table style="border: 1px solid rgb(225, 225, 225);">
+
+<h2>transaction</h2>
+<table class="table table-striped table-bordered table-hover">
      <thead>
-     <tr style="border: 1px solid rgb(225, 225, 225);" class="">
-         <th style="border: 1px solid rgb(225, 225, 225);">code</th>
-         <th style="border: 1px solid rgb(225, 225, 225);">customer</th>
-         <th style="border: 1px solid rgb(225, 225, 225);">email</th>
-         <th style="border: 1px solid rgb(225, 225, 225);">date</th>
-         <th style="border: 1px solid rgb(225, 225, 225);">subtotal ($)</th>
-         <th style="border: 1px solid rgb(225, 225, 225);">shipping ($)</th>
-         <th style="border: 1px solid rgb(225, 225, 225);">total ($)</th>
-     </tr style="border: 1px solid rgb(225, 225, 225);">
+     <tr class="">
+         <th>code</th>
+         <th>customer</th>
+         <th>email</th>
+         <th>date</th>
+         <th>subtotal ($)</th>
+         <th>shipping ($)</th>
+         <th>total ($)</th>
+     </tr>
      </thead>
      <tbody>
-         <tr style="border: 1px solid rgb(225, 225, 225);" style="border: 1px solid rgb(225, 225, 225);">
-             <td style="border: 1px solid rgb(225, 225, 225);" style="border: 1px solid rgb(225, 225, 225);">{{ $tr style="border: 1px solid rgb(225, 225, 225);"ansaction->code }}</td style="border: 1px solid rgb(225, 225, 225);">
-             <td style="border: 1px solid rgb(225, 225, 225);" style="border: 1px solid rgb(225, 225, 225);">
-               @foreach($tr style="border: 1px solid rgb(225, 225, 225);"ansaction->user as $user)
+         <tr>
+             <td>{{ $transaction->code }}</td>
+             <td>
+               @foreach($transaction->user as $user)
                   {{ $user->name }}
                @endforeach
-             </td style="border: 1px solid rgb(225, 225, 225);">
-             <td style="border: 1px solid rgb(225, 225, 225);" style="border: 1px solid rgb(225, 225, 225);" >
-               @foreach($tr style="border: 1px solid rgb(225, 225, 225);"ansaction->user as $user)
+             </td>
+             <td>
+               @foreach($transaction->user as $user)
                   {{ $user->email }}
                @endforeach
-             </td style="border: 1px solid rgb(225, 225, 225);">
-             <td style="border: 1px solid rgb(225, 225, 225);" style="border: 1px solid rgb(225, 225, 225);" >
-               <?php echo date( 'm-d-20y', str style="border: 1px solid rgb(225, 225, 225);"totime($tr style="border: 1px solid rgb(225, 225, 225);"ansaction->date)); ?>
-             </td style="border: 1px solid rgb(225, 225, 225);">
-             <td style="border: 1px solid rgb(225, 225, 225);" style="border: 1px solid rgb(225, 225, 225);" >{{ $tr style="border: 1px solid rgb(225, 225, 225);"ansaction->subtotal }}</td style="border: 1px solid rgb(225, 225, 225);">
-             <td style="border: 1px solid rgb(225, 225, 225);" style="border: 1px solid rgb(225, 225, 225);" >{{ $tr style="border: 1px solid rgb(225, 225, 225);"ansaction->shipping }}</td style="border: 1px solid rgb(225, 225, 225);">
-             <td style="border: 1px solid rgb(225, 225, 225);" style="border: 1px solid rgb(225, 225, 225);"  class="success"><str style="border: 1px solid rgb(225, 225, 225);"ong>{{ $tr style="border: 1px solid rgb(225, 225, 225);"ansaction->total }}</str style="border: 1px solid rgb(225, 225, 225);"ong></td style="border: 1px solid rgb(225, 225, 225);">
-             </td style="border: 1px solid rgb(225, 225, 225);">
-         </tr style="border: 1px solid rgb(225, 225, 225);">
+             </td>
+             <td>
+               <?php echo date( 'm-d-20y', strtotime($transaction->date)); ?>
+             </td>
+             <td>{{ $transaction->subtotal }}</td>
+             <td>{{ $transaction->shipping }}</td>
+             <td class="success"><strong>{{ $transaction->total }}</strong></td>
+             </td>
+         </tr>
      </tbody>
 
  </table>
 
 <h2>user detail</h2>
-<table style="border: 1px solid rgb(225, 225, 225);" class="table table-str style="border: 1px solid rgb(225, 225, 225);"iped  table-hover">
+<table class="table table-striped  table-hover">
 
-<tr style="border: 1px solid rgb(225, 225, 225);">
- <td style="border: 1px solid rgb(225, 225, 225);">firstname</td style="border: 1px solid rgb(225, 225, 225);">
- <td style="border: 1px solid rgb(225, 225, 225);"></td style="border: 1px solid rgb(225, 225, 225);">
- <td style="border: 1px solid rgb(225, 225, 225);">{{ $profile->firstname }}</td style="border: 1px solid rgb(225, 225, 225);">
-</tr style="border: 1px solid rgb(225, 225, 225);">
+<tr>
+ <td>firstname</td>
+ <td></td>
+ <td>{{ $profile->firstname }}</td>
+</tr>
 
-<tr style="border: 1px solid rgb(225, 225, 225);">
- <td style="border: 1px solid rgb(225, 225, 225);">lastname</td style="border: 1px solid rgb(225, 225, 225);">
-<td style="border: 1px solid rgb(225, 225, 225);"></td style="border: 1px solid rgb(225, 225, 225);">
- <td style="border: 1px solid rgb(225, 225, 225);">{{ $profile->lastname }}</td style="border: 1px solid rgb(225, 225, 225);">
-</tr style="border: 1px solid rgb(225, 225, 225);">
+<tr>
+ <td>lastname</td>
+<td></td>
+ <td>{{ $profile->lastname }}</td>
+</tr>
 
 
-<tr style="border: 1px solid rgb(225, 225, 225);">
- <td style="border: 1px solid rgb(225, 225, 225);">Str style="border: 1px solid rgb(225, 225, 225);"eet Address)</td style="border: 1px solid rgb(225, 225, 225);">
- <td style="border: 1px solid rgb(225, 225, 225);"></td style="border: 1px solid rgb(225, 225, 225);">
- <td style="border: 1px solid rgb(225, 225, 225);">{{ $profile->str style="border: 1px solid rgb(225, 225, 225);"eet }}</td style="border: 1px solid rgb(225, 225, 225);">
-</tr style="border: 1px solid rgb(225, 225, 225);">
+<tr>
+ <td>Street Address)</td>
+ <td></td>
+ <td>{{ $profile->street }}</td>
+</tr>
 
-<tr style="border: 1px solid rgb(225, 225, 225);">
- <td style="border: 1px solid rgb(225, 225, 225);">Town / City</td style="border: 1px solid rgb(225, 225, 225);">
- <td style="border: 1px solid rgb(225, 225, 225);"></td style="border: 1px solid rgb(225, 225, 225);">
- <td style="border: 1px solid rgb(225, 225, 225);">{{ $profile->city }}</td style="border: 1px solid rgb(225, 225, 225);">
-</tr style="border: 1px solid rgb(225, 225, 225);">
+<tr>
+ <td>Town / City</td>
+ <td></td>
+ <td>{{ $profile->city }}</td>
+</tr>
 
-<tr style="border: 1px solid rgb(225, 225, 225);">
- <td style="border: 1px solid rgb(225, 225, 225);">Appartement, Office, Etc (Optional)</td style="border: 1px solid rgb(225, 225, 225);">
- <td style="border: 1px solid rgb(225, 225, 225);"></td style="border: 1px solid rgb(225, 225, 225);">
- <td style="border: 1px solid rgb(225, 225, 225);">{{ $profile->optionals }}</td style="border: 1px solid rgb(225, 225, 225);">
-</tr style="border: 1px solid rgb(225, 225, 225);">
+<tr>
+ <td>Appartement, Office, Etc (Optional)</td>
+ <td></td>
+ <td>{{ $profile->optionals }}</td>
+</tr>
 
-<tr style="border: 1px solid rgb(225, 225, 225);">
- <td style="border: 1px solid rgb(225, 225, 225);">State / Countr style="border: 1px solid rgb(225, 225, 225);"y</td style="border: 1px solid rgb(225, 225, 225);">
- <td style="border: 1px solid rgb(225, 225, 225);"></td style="border: 1px solid rgb(225, 225, 225);">
- <td style="border: 1px solid rgb(225, 225, 225);">{{ $profile->state }}</td style="border: 1px solid rgb(225, 225, 225);">
-</tr style="border: 1px solid rgb(225, 225, 225);">
+<tr>
+ <td>State / Country</td>
+ <td></td>
+ <td>{{ $profile->state }}</td>
+</tr>
 
-<tr style="border: 1px solid rgb(225, 225, 225);">
- <td style="border: 1px solid rgb(225, 225, 225);">Postcode / Zip</td style="border: 1px solid rgb(225, 225, 225);">
- <td style="border: 1px solid rgb(225, 225, 225);"></td style="border: 1px solid rgb(225, 225, 225);">
- <td style="border: 1px solid rgb(225, 225, 225);">{{ $profile->postcode }}</td style="border: 1px solid rgb(225, 225, 225);">
-</tr style="border: 1px solid rgb(225, 225, 225);">
+<tr>
+ <td>Postcode / Zip</td>
+ <td></td>
+ <td>{{ $profile->postcode }}</td>
+</tr>
 
-<tr style="border: 1px solid rgb(225, 225, 225);">
- <td style="border: 1px solid rgb(225, 225, 225);">Email Address</td style="border: 1px solid rgb(225, 225, 225);">
- <td style="border: 1px solid rgb(225, 225, 225);"></td style="border: 1px solid rgb(225, 225, 225);">
- <td style="border: 1px solid rgb(225, 225, 225);">{{ $profile->email }}</td style="border: 1px solid rgb(225, 225, 225);">
-</tr style="border: 1px solid rgb(225, 225, 225);">
+<tr>
+ <td>Email Address</td>
+ <td></td>
+ <td>{{ $profile->email }}</td>
+</tr>
 
-<tr style="border: 1px solid rgb(225, 225, 225);">
- <td style="border: 1px solid rgb(225, 225, 225);">Phone</td style="border: 1px solid rgb(225, 225, 225);">
- <td style="border: 1px solid rgb(225, 225, 225);"></td style="border: 1px solid rgb(225, 225, 225);">
- <td style="border: 1px solid rgb(225, 225, 225);">{{ $profile->phone }}</td style="border: 1px solid rgb(225, 225, 225);">
-</tr style="border: 1px solid rgb(225, 225, 225);">
+<tr>
+ <td>Phone</td>
+ <td></td>
+ <td>{{ $profile->phone }}</td>
+</tr>
 
-<tr style="border: 1px solid rgb(225, 225, 225);">
- <td style="border: 1px solid rgb(225, 225, 225);">Order Notes</td style="border: 1px solid rgb(225, 225, 225);">
- <td style="border: 1px solid rgb(225, 225, 225);"></td style="border: 1px solid rgb(225, 225, 225);">
- <td style="border: 1px solid rgb(225, 225, 225);">{{ $profile->note }}</td style="border: 1px solid rgb(225, 225, 225);">
-</tr style="border: 1px solid rgb(225, 225, 225);">
+<tr>
+ <td>Order Notes</td>
+ <td></td>
+ <td>{{ $profile->note }}</td>
+</tr>
 
 </table>
 
 <h2>product</h2>
-<table class="table table-str style="border: 1px solid rgb(225, 225, 225);"iped table-bordered table-hover">
+<table class="table table-striped table-bordered table-hover">
      <thead>
-     <tr style="border: 1px solid rgb(225, 225, 225);" class="">
+     <tr class="">
          <th>No</th>
          <th>product name</th>
          <th>description</th>
@@ -116,33 +117,33 @@
          <th>quantity</th>
          <th>subsribe</th>
          <th>subtotal ($)</th>
-     </tr style="border: 1px solid rgb(225, 225, 225);">
+     </tr>
      </thead>
      <tbody>
         <?php $index = 1; ?>
      @foreach ($products as $product)
-         <tr style="border: 1px solid rgb(225, 225, 225);">
-             <td style="border: 1px solid rgb(225, 225, 225);">{{ $index }}</td style="border: 1px solid rgb(225, 225, 225);">
-             <td style="border: 1px solid rgb(225, 225, 225);"><a href="{{ url('product/detail/'.$product->id) }}">{{ $product->product_name }}</a></td style="border: 1px solid rgb(225, 225, 225);">
-             <td style="border: 1px solid rgb(225, 225, 225);">{{ $product->desc }}</td style="border: 1px solid rgb(225, 225, 225);">
-             <td style="border: 1px solid rgb(225, 225, 225);">{{ $product->price }}</td style="border: 1px solid rgb(225, 225, 225);">
-             <td style="border: 1px solid rgb(225, 225, 225);">
+         <tr>
+             <td>{{ $index }}</td>
+             <td><a href="{{ url('product/detail/'.$product->id) }}">{{ $product->product_name }}</a></td>
+             <td>{{ $product->desc }}</td>
+             <td>{{ $product->price }}</td>
+             <td>
                @if($product->subsribe == 0)
                  {{ '0%' }}
                @else
                  {{ '15%' }}
                @endif
-             </td style="border: 1px solid rgb(225, 225, 225);">
+             </td>
              <th>{{ $product->qty }}</th>
-             <td style="border: 1px solid rgb(225, 225, 225);">
+             <td>
                @if($product->subsribe == 0)
                   <span class="label label-info">none</span>
                @else
                  {{ $product->subsribe.' mount' }}
                @endif
-             </td style="border: 1px solid rgb(225, 225, 225);">
+             </td>
              <th>{{ $product->subtotal }}</th>
-         </tr style="border: 1px solid rgb(225, 225, 225);">
+         </tr>
            <?php $index++ ?>
      @endforeach
 

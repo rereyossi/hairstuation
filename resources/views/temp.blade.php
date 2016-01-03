@@ -1,113 +1,149 @@
-@extends('template_user.main')
-@section('content')
-<form action="{{ url('cart/update') }}" method="POST">
-{!! csrf_field() !!}
+<?php
 
-<div class="row" id="cartlist">
-      <div class="col-md-2"></div>
-      <div class="col-md-5">
-      	<h3 style="color:#f7941d;"><span class="glyphicon glyphicon-shopping-cart"></span>&nbsp; Cart</h3>
-        <div class="table-responsive">
-        <table class="table table-condensed" id="cartable">
-        	<thead>
-                <tr>
-                    <th colspan="3">Product</th>
-                    <th>Price</th>
-                    <th>Quantity</th>
-                    <th>Total</th>
-                </tr>
-            </thead>
-            <tbody>
-              <?php $index = 1;?>
-              @foreach($cart as $row)
+namespace App\Http\Controllers;
+
+use Illuminate\Http\Request;
+
+use App\Http\Requests;
+use App\Http\Controllers\Controller;
 
 
-            	<tr>
-                	<td id="cartdelete">
-                      <a href="{{ url('cart/delete/'.$row->rowid) }}"><span class="glyphicon glyphicon-remove"></span></a>
-                  </td>
-                    <td id="cartimage">
-                      <?php
-                      $filename =  $row->options->img;
-                       ?>
-                        <?php if($row->options->has('subs')): ?>
-                          <img src="{{ url('uploads/images/small/'.$filename) }}" alt="{{ $filename}}" />
-                        <?php endif; ?>
-                    </td>
-                	<td><strong><?php echo $row->name;?></strong></td>
-                    <td>$<?php echo $row->price;?></td>
-                    <td>
-                    	<!-- <span class="glyphicon glyphicon-minus"></span>
+use App\Product;
+use App\Transaction;
+use App\User;
+use App\Profile;
+use App\Group;
 
-                      <span class="glyphicon glyphicon-plus"></span> -->
-                      <input class="form-control" type="text" name="{{ 'qty_'.$index }}" value="<?php echo $row->qty?>">
-                    </td>
-                    <td>$<?php echo $row->subtotal;?></td>
-                </tr>
-                <?php if($row->options->subs > 0): ?>
-                <tr id="sublist">
-                	<td colspan="4">
-                    	<h6>Auto-Replenish: This item will ship now and deliver every
-                        <span style="color:#f7941d;">
-                          <?php echo $row->options->subs.' month(s).'; ?>
-                        </span>
-                        <select class="form-control" name="{{ 'subs_'.$index }}">
-                          @for($i=1; $i < 7; $i++)
-                            @if($i == $row->options->subs)
-                              <option value="{{ $i }}" selected>{{ $i }}</option>
-                            @else
-                              <option value="{{ $i }}">{{ $i }}</option>
-                            @endif
-                          @endfor
-                        </select>
-                      </h6>
-                    </td>
-                    <td><a><h5>Modify</h5></a></td>
-                    <td><a><h5>Remove</h5></a></td>
-                </tr>
-              <?php endif; ?>
+use Validator;
+use Input;
+use Session;
+use Redirect;
+use Cart;
+use Auth;
+use Mail;
+use DB;
 
-              <?php $index++?>
-              @endforeach
+class TransactionController extends Controller
+{
 
-            </tbody>
-        </table>
-        </div>
-      </div>
-
-      <div class="col-md-3" style="margin-top:50px;">
-      	<ul class="list-group" id="cartlistnav">
-        	<li class="list-group-item active">
-              CART TOTALS
-            </li>
-            <li class="list-group-item">
-              Subtotal
-              <span class="badge"><?php echo "$ ".Cart::total(); ?></span>
-            </li>
-            <li class="list-group-item">
-              Shippping
-              <span class="badge"><em>
-                <!-- shipping count start -->
-                  {{ '$'.$cost }}
-                <!-- shipping count end -->
-              </em></span>
-            </li>
-
-        	<li class="list-group-item">
-              <strong>TOTAL</strong>
-            </li>
-            <li class="list-group-item" style="color:#f7941d; text-align:right">
-              <h4><strong><?php echo "$".$cost+Cart::total(); ?></strong></h4>
-            </li>
-        </ul>
-        <div class="list-group" id="cartlistnav">
-        	<a href="{{ url('cart/update') }}" type="submit" class="list-group-item">Update Cart</a>
-          <a  href="{{ url('cart/billing') }}" type="button" class="list-group-item">Proceed To Checkout</a>
-        </div>
+  public function __construct(){
+    $this->middleware('admin', ['except' => ['send_order', 'send_mail', 'subscribe']]);
+  }
 
 
-      </div>
-      <div class="col-md-2"></div>
-    </div>
-  </form>
-@stop
+    public function management(){
+      $transactions = Transaction::with('user')->orderBy('id', 'desc')->get();
+      $data['header'] = 'transaction management';
+      return view('transaction.management',compact('transactions'), $data);
+    }
+
+
+    /**
+     * Display the specified resource.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function show($id)
+    {
+      $order = Transaction::get_order($id);
+      $id_product = $order->id_product;
+      $id_user = $order->id_user;
+
+
+      $transaction = Transaction::where('id', '=', $id)->with(['user' => function ($query) {
+          $query->first();
+      }])->first();
+      $products = Transaction::get_product($id);
+      $profile = Profile::where('id_user', '=', $id_user)->first();
+      $data['header'] = 'transaction detail';
+      return view('transaction.detail',compact('transaction', 'products', 'profile'), $data);
+    }
+
+
+    // public function subscribe(){
+    //     $date = 2;
+    //     $mount = 12;
+    //
+    //     //find transaction dengan tanggal hari ini
+    //     $transactions =  Transaction::where(DB::raw("DAY(date)"), '=',$date)->get();
+    //     // find product subscribe
+    //     foreach($transactions as $transaction):
+    //       $products = Transaction::get_product($transaction->id);
+    //       foreach($products as $product):
+    //         // start subsribe
+    //         // cari product dengan subribe kelipatan
+    //         if($product->subsribe > 0):
+    //           if($mount%$product->subsribe == 0):
+    //
+    //           // start mail send subsribe
+    //           $order = Transaction::get_order($transaction->id);
+    //           $id_product = $order->id_product;
+    //           $id_user = $order->id_user;
+    //           $subs = $product->subsribe;
+    //
+    //
+    //           $transaction = Transaction::where('id', '=', $transaction->id)->with('user')->first();
+    //           $products = Transaction::get_subs($transaction->id, $subs);
+    //           $profile = Profile::where('id_user', '=', $id_user)->first();
+    //
+    //           $data = array(
+    //             'email' => $profile->email,
+    //             'from' => 'hallo@hairstuation.com',
+    //             'name' => $profile->firstname.' '.$profile->lastname,
+    //           );
+    //           Mail::send( 'email.send_order', compact('transaction', 'products', 'profile'), function( $message ) use ($data)
+    //           {
+    //               $message->to( $data['email'] )->from( $data['from'], $data['name'] )->subject( 'hairstuation.com: order product' );
+    //           });
+    //           // end mail send subsribe
+    //         endif;
+    //       endif;
+    //         // end subsribe
+    //
+    //       endforeach;
+    //     endforeach;
+    //
+    // }
+    //
+
+
+    public function send_mail()
+    {
+      $sent = Mail::send('email.tes_mail', array('key' => 'value'), function($message)
+      {
+          $message->from('reavinci@gmail.com');
+          $message->to('rereyossi@gmail.com', 'John Smith')->subject('tes kirim order!');
+      });
+
+      if( ! $sent) dd("something wrong");
+      dd("send order");
+
+
+    }
+
+
+    public function send_order($id){
+
+      $order = Transaction::get_order($id);
+      $id_product = $order->id_product;
+      $id_user = $order->id_user;
+
+
+      $transaction = Transaction::where('id', '=', $id)->with('user')->first();
+      $products = Transaction::get_product($id);
+      $profile = Profile::where('id_user', '=', $id_user)->first();
+
+
+      $data = array(
+        'email' => $profile->email,
+        'from' => 'hallo@hairstuation.com',
+        'name' => $profile->firstname.' '.$profile->lastname,
+      );
+      Mail::send( 'email.send_order', compact('transaction', 'products', 'profile'), function( $message ) use ($data)
+      {
+          $message->to( $data['email'] )->from( $data['from'], $data['name'] )->subject( 'hairstuation.com: order product' );
+      });
+
+    }
+}

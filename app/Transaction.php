@@ -47,11 +47,11 @@ class transaction extends Model
 
         return $product;
     }
-    public static function get_subs($id, $subs = null){
+    public static function get_subs($id, $subs){
         $product = DB::table('order')
                 ->join('products', 'order.id_product', '=', 'products.id')
                 ->where('id_transaction', '=', $id)
-                // ->where('subsribe', '=', $subs)
+                ->where('subsribe', '=', $subs)
                 ->get();
 
         return $product;

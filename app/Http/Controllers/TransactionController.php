@@ -62,16 +62,45 @@ class TransactionController extends Controller
 
 
     public function subscribe(){
-        $date = date('d');
+        $date = 2;
         $mount = 12;
 
         //find transaction dengan tanggal hari ini
-        $transaction =  Transaction::where(DB::raw("DAY(date)"), '=',$date)->get();
+        $transactions =  Transaction::where(DB::raw("DAY(date)"), '=',$date)->get();
         // find product subscribe
-        foreach($transaction as $trans):
-          $product = Transaction::get_subs($trans->id);
-          foreach($product as $pro):
-            echo $pro->product_name.'=='.$pro->subsribe.'<br>';
+        foreach($transactions as $transaction):
+          $products = Transaction::get_product($transaction->id);
+          foreach($products as $product):
+            // start subsribe
+            // cari product dengan subribe kelipatan
+            if($product->subsribe > 0):
+              if($mount%$product->subsribe == 0):
+
+              // start mail send subsribe
+              $order = Transaction::get_order($transaction->id);
+              $id_product = $order->id_product;
+              $id_user = $order->id_user;
+              $subs = $product->subsribe;
+
+
+              $transaction = Transaction::where('id', '=', $transaction->id)->with('user')->first();
+              $products = Transaction::get_subs($transaction->id, $subs);
+              $profile = Profile::where('id_user', '=', $id_user)->first();
+
+              $data = array(
+                'email' => $profile->email,
+                'from' => 'hallo@hairstuation.com',
+                'name' => $profile->firstname.' '.$profile->lastname,
+              );
+              Mail::send( 'email.send_order', compact('transaction', 'products', 'profile'), function( $message ) use ($data)
+              {
+                  $message->to( $data['email'] )->from( $data['from'], $data['name'] )->subject( 'hairstuation.com: order product' );
+              });
+              // end mail send subsribe
+            endif;
+          endif;
+            // end subsribe
+
           endforeach;
         endforeach;
 
