@@ -19,6 +19,18 @@
           {{ $product->desc }}
         </p>
 
+        <div class="rating">
+          <?php $rating = $product->rating; ?>
+          @for ($i=0; $i < $rating; $i++)
+          <span class="glyphicon glyphicon-star"></span>
+          @endfor
+          @for ($i=0; $i < 5-$rating; $i++)
+          <span class="glyphicon glyphicon-star-empty"></span>
+          @endfor
+        </div>
+        <h3>{{ '$'.$product->price }}</h3>
+
+
         <div id="sparator"></div>
         <div class="row">
           <form action="{{ url('cart/create/'.$product->id) }}">

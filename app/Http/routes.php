@@ -29,7 +29,7 @@ Route::get('profile/save', function () {
 });
 
 
-// Route::get('/','ProductController@index');
+
 // product
 Route::get('product/view', 'ProductController@index');
 Route::get('product/grooming', 'ProductController@grooming');
@@ -72,11 +72,8 @@ Route::get('transaction/send/{id}', 'TransactionController@send_order');
 Route::get('transaction/mail', 'TransactionController@send_mail');
 Route::get('transaction/subscribe', 'TransactionController@subscribe');
 
-// auth user
-Route::get('auth/management', 'Auth\AuthController@management');
-Route::get('auth/login', 'Auth\AuthController@getLogin');
-Route::post('auth/login', 'Auth\AuthController@postLogin');
-// Route::get('auth/logout', 'Auth\AuthController@getLogout');
+
+
 
 Route::get('auth/logout', function()
    {
@@ -85,23 +82,37 @@ Route::get('auth/logout', function()
        return Redirect::to('/');
    })->before('auth.basic');
 
-Route::get('auth/register', 'Auth\AuthController@getRegister');
-Route::post('auth/register', 'Auth\AuthController@postRegister');
 
 
+// password
 Route::get('password/email', 'Auth\PasswordController@getEmail');
 Route::post('password/email', 'Auth\PasswordController@postEmail');
-
+Route::get('user/password_edit', 'UserController@password_edit');
+Route::post('user/password_update', 'UserController@password_update');
 
 // profile
 Route::get('profile/view', 'ProfileController@index');
 Route::get('profile/management', 'ProfileController@management');
 Route::get('profile/create/{id?}', 'ProfileController@create');
-// Route::post('profile/save', 'ProfileController@store');
 Route::get('profile/detail', 'ProfileController@show');
 Route::get('profile/edit', 'ProfileController@edit');
 Route::post('profile/update', 'ProfileController@update');
 Route::get('profile/delete/{id}', 'ProfileController@destroy');
+
+//user
+Route::get('user/management', 'UserController@management');
+Route::get('user/create/', 'UserController@create');
+Route::get('user/detail', 'UserController@show');
+Route::get('user/edit', 'UserController@edit');
+Route::post('user/update', 'UserController@update');
+Route::post('user/save', 'UserController@store');
+Route::get('user/login', 'UserController@login');
+Route::get('user/logout', 'UserController@logout');
+Route::post('user/get_login', 'UserController@getLogin');
+Route::get('user/tes', 'UserController@tes');
+
+
+
 
 // group
 Route::get('group/testing', 'Auth\GroupController@create');

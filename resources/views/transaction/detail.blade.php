@@ -1,5 +1,6 @@
 @extends('template_admin.main')
 @section('content')
+<?php $total = array('null'); ?>
 <h2>transaction</h2>
 <table class="table table-striped table-bordered table-hover">
      <thead>
@@ -17,19 +18,15 @@
          <tr>
              <td>{{ $transaction->code }}</td>
              <td>
-               @foreach($transaction->user as $user)
-                  {{ $user->name }}
-               @endforeach
+               {{ $transaction->user->name }}
              </td>
              <td>
-               @foreach($transaction->user as $user)
-                  {{ $user->email }}
-               @endforeach
+               {{ $transaction->user->email }}
              </td>
              <td>
                <?php echo date( 'm-d-20y', strtotime($transaction->date)); ?>
              </td>
-             <td>{{ $transaction->subtotal }}</td>
+             <td>{{ $transaction->subtotal  }}</td>
              <td>{{ $transaction->shipping }}</td>
              <td class="success"><strong>{{ $transaction->total }}</strong></td>
              </td>
@@ -145,8 +142,6 @@
          </tr>
            <?php $index++ ?>
      @endforeach
-
-
      </tbody>
 
  </table>

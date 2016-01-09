@@ -22,12 +22,12 @@ class Product extends Model
 
  public function transaction()
  {
-   return $this->belongsToMany('App\Product', 'order', 'id_product', 'id_transaction', 'id_user');
+   return $this->belongsToMany('App\Product', 'order', 'id_product', 'id_transaction');
  }
 
  public function user()
  {
-   return $this->belongsToMany('App\User', 'order', 'id_product', 'id_transaction', 'id_user');
+   return $this->belongsToMany('App\User', 'order', 'id_product', 'id_transaction');
  }
 
 

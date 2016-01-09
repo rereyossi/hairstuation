@@ -17,7 +17,7 @@ class AdminMiddleware
     {
       if (User::is_admin() == false)
       {
-        return redirect()->guest('auth/login');
+        return redirect('/');
       }
         return $next($request);
     }

@@ -31,7 +31,8 @@ class ProductController extends Controller
 {
 
     public function __construct(){
-      $this->middleware('admin', ['except' => ['grooming', 'index', 'show']]);
+      $this->middleware('superadmin', ['except' => ['management','grooming', 'index', 'show']]);
+      $this->middleware('admin', ['only' => ['management']]);
     }
     /**
      * Display a listing of the resource.
@@ -119,10 +120,12 @@ class ProductController extends Controller
           $product = new Product;
         }
         $product->product_name       = Input::get('product_name');
+        $product->color       = Input::get('color');
         $product->desc                = Input::get('desc');
         $product->price               = Input::get('price');
-        $product->category               = Input::get('category');
+        $product->category             = Input::get('category');
           if (empty($id)) {
+            $product->rating              = 1;
             $product->save();
             $last_id = $product->id;
 

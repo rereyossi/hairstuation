@@ -1,7 +1,7 @@
-@extends('template_admin.main')
+@extends('template_user.main')
 @section('content')
 
-<form method="POST" action="{{ url('/password/email') }}">
+<form method="POST" action="{{ url('/password/email') }}" style="width: 400px; margin: 0 auto;">
     {!! csrf_field() !!}
 
     <div class="form-group">

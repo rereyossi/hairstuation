@@ -46,24 +46,19 @@ class TransactionController extends Controller
      */
     public function show($id)
     {
-      $order = Transaction::get_order($id);
-      $id_product = $order->id_product;
-      $id_user = $order->id_user;
-
-
-      $transaction = Transaction::where('id', '=', $id)->with(['user' => function ($query) {
-          $query->first();
-      }])->first();
+      $transaction = Transaction::where('id', '=', $id)->with('user')->first();
+      $id_user = $transaction->id_user;
       $products = Transaction::get_product($id);
       $profile = Profile::where('id_user', '=', $id_user)->first();
       $data['header'] = 'transaction detail';
+
       return view('transaction.detail',compact('transaction', 'products', 'profile'), $data);
     }
 
 
     public function subscribe(){
-        $date = 2;
-        $mount = 12;
+        $date = date('d');
+        $mount = date('m');
 
         //find transaction dengan tanggal hari ini
         $transactions =  Transaction::where(DB::raw("DAY(date)"), '=',$date)->get();
@@ -79,20 +74,38 @@ class TransactionController extends Controller
               // start mail send subsribe
               $order = Transaction::get_order($transaction->id);
               $id_product = $order->id_product;
-              $id_user = $order->id_user;
               $subs = $product->subsribe;
 
 
               $transaction = Transaction::where('id', '=', $transaction->id)->with('user')->first();
+              $id_user = $transaction->id_user;
               $products = Transaction::get_subs($transaction->id, $subs);
               $profile = Profile::where('id_user', '=', $id_user)->first();
+
+              // start count total and price
+              $qty = 0;
+              $price_total = 0;
+              foreach($products as $product):
+                $qty += $product->qty;
+                $price_total += $product->subtotal;
+              endforeach;
+
+              // shipping calculate
+              if ($qty == 1) {
+                $shipping = 5;
+              }else{
+                $shipping = (2*($qty-1))+5;
+              }
 
               $data = array(
                 'email' => $profile->email,
                 'from' => 'hallo@hairstuation.com',
                 'name' => $profile->firstname.' '.$profile->lastname,
+                'subs_shipping' => $shipping,
+                'subs_subtotal'=> $price_total,
+                'subs_total'=> $price_total+$shipping,
               );
-              Mail::send( 'email.send_order', compact('transaction', 'products', 'profile'), function( $message ) use ($data)
+              Mail::send( 'email.transaction.subsribe', compact('transaction', 'products', 'profile'), function( $message ) use ($data)
               {
                   $message->to( $data['email'] )->from( $data['from'], $data['name'] )->subject( 'hairstuation.com: order product' );
               });
@@ -108,29 +121,25 @@ class TransactionController extends Controller
 
 
 
-    public function send_mail()
-    {
-      $sent = Mail::send('email.tes_mail', array('key' => 'value'), function($message)
-      {
-          $message->from('reavinci@gmail.com');
-          $message->to('rereyossi@gmail.com', 'John Smith')->subject('tes kirim order!');
-      });
-
-      if( ! $sent) dd("something wrong");
-      dd("send order");
-
-
-    }
+    // public function send_mail()
+    // {
+    //   $sent = Mail::send('email.tes_mail', array('key' => 'value'), function($message)
+    //   {
+    //       $message->from('reavinci@gmail.com');
+    //       $message->to('rereyossi@gmail.com', 'John Smith')->subject('tes kirim order!');
+    //   });
+    //
+    //   if( ! $sent) dd("something wrong");
+    //   dd("send order");
+    //
+    //
+    // }
 
 
     public function send_order($id){
 
-      $order = Transaction::get_order($id);
-      $id_product = $order->id_product;
-      $id_user = $order->id_user;
-
-
       $transaction = Transaction::where('id', '=', $id)->with('user')->first();
+      $id_user = $transaction->id_user;
       $products = Transaction::get_product($id);
       $profile = Profile::where('id_user', '=', $id_user)->first();
 
@@ -140,7 +149,7 @@ class TransactionController extends Controller
         'from' => 'hallo@hairstuation.com',
         'name' => $profile->firstname.' '.$profile->lastname,
       );
-      Mail::send( 'email.send_order', compact('transaction', 'products', 'profile'), function( $message ) use ($data)
+      Mail::send( 'email.transaction.order', compact('transaction', 'products', 'profile'), function( $message ) use ($data)
       {
           $message->to( $data['email'] )->from( $data['from'], $data['name'] )->subject( 'hairstuation.com: order product' );
       });

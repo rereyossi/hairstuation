@@ -21,7 +21,8 @@ class CommentController extends Controller
 {
 
   public function __construct(){
-    $this->middleware('admin', ['except' => ['create', 'store', 'show']]);
+    $this->middleware('superadmin', ['except' => ['management', 'create', 'store', 'show']]);
+    $this->middleware('admin', ['only' => ['management']]);
   }
 
     public function management(){

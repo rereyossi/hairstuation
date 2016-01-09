@@ -8,12 +8,14 @@ if (empty($product->id)):
   $desc = '';
   $price = '';
   $category = '';
+  $color = '';
 else:
   $product_id = $product->id;
   $product_name = $product->product_name;
   $desc = $product->desc;
   $price = $product->price;
-  $category = $product->status;
+  $category = $product->category;
+  $color = $product->color;
 endif;
 ?>
 <div class="row">
@@ -40,6 +42,11 @@ endif;
       </div>
 
       <div class="form-group">
+        <label>product color </label>
+        <input type="text" class="form-control" name="color" value="{{ $color }}">
+      </div>
+
+      <div class="form-group">
         <label>price</label>
         <input type="number" class="form-control" name="price" value="{{ $price }}">
       </div>
@@ -47,13 +54,14 @@ endif;
       <div class="form-group">
         <label>category</label>
         <select class="form-control" name="category">
-          <?php if($category == 'grooming'): ?>
-          <option value="styling">styling</option>
+          @if($category == 'grooming')
+          <option value="styling" >styling</option>
           <option value="grooming" selected>grooming</option>
-        <?php else: ?>
+          @else
           <option value="styling" selected>styling</option>
-          <option value="grooming">grooming</option>
-        <?php endif; ?>
+          <option value="grooming" >grooming</option>
+          @endif
+
         </select>
       </div>
 

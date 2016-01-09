@@ -41,7 +41,7 @@ class User extends Model implements AuthenticatableContract,
 
 
     public function transaction(){
-       return $this->belongsToMany('App\Transaction', 'order', 'id_user', 'id_transaction');
+       return $this->hasMany('App\Transaction', 'id_transaction');
    }
 
    public function product(){
@@ -49,7 +49,7 @@ class User extends Model implements AuthenticatableContract,
     }
 
    public function group(){
-        return $this->belongsToMany('App\Group', 'pivot_users', 'id_group', 'id_user');
+        return $this->belongsToMany('App\Group', 'pivot_users', 'id_user', 'id_group');
    }
 
    public function profile(){
@@ -62,7 +62,16 @@ class User extends Model implements AuthenticatableContract,
                ->insert($data);
    }
 
-   public  static function is_admin(){
+   public static function get_group($id){
+       $group = DB::table('pivot_users')
+              ->join('group_users', 'pivot_users.id_group', '=', 'group_users.id')
+              ->where('id_user', $id)
+              ->select('id_group', 'id_user', 'group_name')
+              ->first();
+      return $group;
+   }
+
+   public  static function is_superadmin(){
        $user = Auth::user();
        if($user):
        $group = DB::table('pivot_users')
@@ -74,6 +83,22 @@ class User extends Model implements AuthenticatableContract,
         return false;
       endif;
    }
+
+
+   public  static function is_admin(){
+       $user = Auth::user();
+       if($user):
+       $group = DB::table('pivot_users')
+               ->where('id_user', $user->id)
+               ->first();
+        if ($group->id_group == 1 || $group->id_group == 2) {
+          return true;
+        }
+        return false;
+      endif;
+   }
+
+
 
 
 

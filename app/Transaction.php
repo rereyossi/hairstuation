@@ -33,7 +33,7 @@ class transaction extends Model
     public static function get_order($id){
         $order = DB::table('order')
                 ->where('id_transaction', '=', $id)
-                ->select('id', 'id_transaction', 'id_product', 'id_user')
+                ->select('id', 'id_transaction', 'id_product')
                 ->first();
 
         return $order;
@@ -58,7 +58,7 @@ class transaction extends Model
     }
     public function user()
     {
-      return $this->belongsToMany('App\User', 'order', 'id_transaction', 'id_user');
+      return $this->belongsTo('App\User', 'id_user');
     }
 
     public function product()

@@ -18,7 +18,10 @@
         <label>
           <input name="remember" type="checkbox"> remember me
         </label>
-      </div>
+    </div>
+    <div class="form-group">
+      <a href="{{ url('password/email') }}">forget password</a>
+    </div>
     <div class="form-group">
       <button type="submit" name="button" class="btn btn-primary">sign in</button>
     </div>

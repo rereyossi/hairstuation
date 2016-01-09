@@ -33,8 +33,9 @@ class AuthController extends Controller
      */
     public function __construct()
     {
-        $this->middleware('admin', ['only' => 'management']);
-        $this->middleware('guest', ['except' => 'getLogout']);
+        $this->middleware('guest', ['except' => ['getLogout', 'management', 'getRegister', 'postRegister']]);
+        $this->middleware('superadmin', ['only' => ['management', 'getRegister', 'postRegister']]);
+
 
     }
 
@@ -74,7 +75,7 @@ class AuthController extends Controller
     }
 
     public function management(){
-      $auths = User::with('profile')->get();
+      $auths = User::with('group')->get();
       $data['header'] = 'user management';
       return view('auth.management',compact('auths'), $data);
     }

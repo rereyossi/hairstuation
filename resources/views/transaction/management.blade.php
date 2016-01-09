@@ -21,15 +21,11 @@
              <td>{{ $transaction->code }}</td>
              <td>
                <a href="{{ url('transaction/detail/'.$transaction->id) }}">
-                 @foreach($transaction->user as $user)
-                    {{ $user->name }}
-                 @endforeach
+                 {{ $transaction->user->name }}
                </a>
              </td>
              <td>
-               @foreach($transaction->user as $user)
-                  {{ $user->email }}
-               @endforeach
+               {{ $transaction->user->email }}
              </td>
              <td>{{ date( 'm-d-20y', strtotime($transaction->date)) }}</td>
              <td>{{ $transaction->subtotal }}</td>

@@ -8,9 +8,10 @@
           <li><a href="{{ URL('transaction/management') }}">transaction</a></li>
           <li><a href="{{ URL('comment/management') }}">comment</a></li>
           <li><a href="{{ URL('location/management') }}">shipping</a></li>
-          <!-- <li><a href="{{ URL('auth/management') }}">member</a></li> -->
+          <li><a href="{{ URL('user/management') }}">member</a></li>
       </ul>
       <ul class="nav navbar-nav pull-right">
+        <li><a href="{{ URL('user/detail') }}">me</a></li>
         <li><a href="{{ URL('/') }}">home</a></li>
         <li><a href="{{ URL('auth/logout') }}">logout</a></li>
       </ul>

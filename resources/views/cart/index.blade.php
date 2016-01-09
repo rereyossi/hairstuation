@@ -43,24 +43,24 @@
                       @endif
 
                     </td>
-                    <td>
-                    	<span class="counting count_minus glyphicon glyphicon-minus"></span>
-                      <span class="qty">{{ $row->qty }}</span>
-                      <span class="counting count_plus glyphicon glyphicon-plus"></span>
-                      <input type="hidden" name="{{ 'qty_'.$index }}" value="<?php echo $row->qty?>">
+                    <td class="count-parent">
+                    	<span data-multi="-1" class="counting count_nav glyphicon glyphicon-minus"></span>
+                      <span class="qty count_value">{{ $row->qty }}</span>
+                      <span data-multi="1" class="counting count_nav glyphicon glyphicon-plus"></span>
+                      <input class="count_new" type="hidden" name="{{ 'qty_'.$index }}" value="<?php echo $row->qty?>">
                     </td>
                     <td>$<?php echo $row->subtotal;?></td>
                 </tr>
                 <?php if($row->options->subs > 0): ?>
                 <tr id="sublist">
-                	<td colspan="4">
+                	<td colspan="4" class="count-parent">
                     	<h6>Auto-Replenish: This item will ship now and deliver every
-                        <span class="counting glyphicon glyphicon-minus"></span>
+                        <span data-multi="-1" class="counting count_subs glyphicon glyphicon-minus"></span>
                         <span class ="subs" style="color:#f7941d;">
-                          <?php echo $row->options->subs.' month(s).'; ?>
+                          <span class="count_value">{{ $row->options->subs }}</span> month(s).
                         </span>
-                        <span class="counting glyphicon glyphicon-plus"></span>
-                        <input type="hidden" name="{{ 'subs_'.$index }}" value="{{ $row->options->subs  }}">
+                        <span data-multi="1" class="counting count_subs glyphicon glyphicon-plus"></span>
+                        <input class="count_new" type="hidden" name="{{ 'subs_'.$index }}" value="{{ $row->options->subs  }}">
                       </h6>
                     </td>
                     <!-- <td><a><h5>Modify</h5></a></td>
@@ -118,9 +118,68 @@
   </style>
   <script>
     $(document).ready(function() {
-      function plus(){
-        var get_plus =
-      }
+      $(".count_nav").on("click", function () {
+        var button = $(this);
+        var input = button.closest('.count-parent').find(".count_value");
+        var input_new = button.closest('.count-parent').find(".count_new");
+
+
+        input.html(function(i, value) {
+            if (value == 1) {
+              return 2;
+            }else{
+              return +value + (1 * +button.data('multi'));
+            }
+
+
+
+
+        });
+
+        input_new.val(function(i, value) {
+          if (value == 1) {
+            return 2;
+          }else{
+            return +value + (1 * +button.data('multi'));
+          }
+        });
+    });
+
+
+    $(".count_subs").on("click", function () {
+      var button = $(this);
+      var input = button.closest('.count-parent').find(".count_value");
+      var input_new = button.closest('.count-parent').find(".count_new");
+
+
+      input.html(function(i, value) {
+          if (value == 1) {
+            return 2;
+          }else if(value >= 6){
+            return 1;
+          }
+          else{
+            return +value + (1 * +button.data('multi'));
+          }
+
+
+
+
+      });
+
+      input_new.val(function(i, value) {
+        if (value == 1) {
+          return 2;
+        }else if(value >= 6){
+          return 1;
+        }
+        else{
+          return +value + (1 * +button.data('multi'));
+        }
+      });
+
+
+  });
     });
   </script>
 @stop

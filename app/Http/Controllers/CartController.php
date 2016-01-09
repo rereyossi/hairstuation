@@ -42,13 +42,15 @@ class cartController extends Controller
     public function index()
     {
       $cart = Cart::content();
-      $count = count($cart);
+      $count = Cart::count();
+
       if ($count == 1) {
         $data['cost'] = 5;
       }else{
         $data['cost'] = (2*($count-1))+5;
       }
       return view('cart.index',compact('cart'), $data);
+
     }
 
     /**
@@ -99,7 +101,7 @@ class cartController extends Controller
     public function billing()
     {
       $cart = Cart::content();
-      $count = count($cart);
+      $count = Cart::count();;
       $locations = Location::get();
 
       // get shipping
@@ -144,15 +146,7 @@ class cartController extends Controller
         $get_shipping = Input::get('shipping');
 
 
-        // #save transaction
-        $transaction  = new Transaction();
-        $transaction->date       = date('Y-m-d');
-        $transaction->code       = $formid;
-        $transaction->subtotal  = $get_subtotal;
-        $transaction->shipping   = $get_shipping;
-        $transaction->total      = $get_subtotal+$get_shipping;
-        $transaction->save();
-        $transaction_id = $transaction->id;
+
 
         // #save user
         $user = new User();
@@ -185,6 +179,18 @@ class cartController extends Controller
         $profile->save();
         $profile_id = $profile->id;
 
+
+        // #save transaction
+        $transaction  = new Transaction();
+        $transaction->date       = date('Y-m-d');
+        $transaction->code       = $formid;
+        $transaction->subtotal  = $get_subtotal;
+        $transaction->shipping   = $get_shipping;
+        $transaction->total      = $get_subtotal+$get_shipping;
+        $transaction->id_user   =   $user_id;
+        $transaction->save();
+        $transaction_id = $transaction->id;
+
         #save order
         #show all data in cart
         foreach ($cart_content as $cart){
@@ -192,7 +198,6 @@ class cartController extends Controller
           $data = array(
             'id_transaction' => $transaction_id,
             'id_product' => $cart->id,
-            'id_user' => $user_id,
             'qty' => $cart->qty,
             'subsribe'=> $cart->options->subs,
             'subtotal'=> $cart->subtotal,
