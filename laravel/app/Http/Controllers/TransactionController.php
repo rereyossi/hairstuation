@@ -37,6 +37,12 @@ class TransactionController extends Controller
       return view('transaction.management',compact('transactions'), $data);
     }
 
+    public function management_subscribe(){
+      $transactions = Transaction::with('user')->orderBy('id', 'desc')->where('subsribe_status', 'active')->get();
+      $data['header'] = 'transaction management';
+      return view('transaction.management_subsribe',compact('transactions'), $data);
+    }
+
 
     /**
      * Display the specified resource.

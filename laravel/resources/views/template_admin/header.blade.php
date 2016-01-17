@@ -6,6 +6,7 @@
       <ul class="nav navbar-nav">
           <li><a href="{{ URL('product/management') }}">product</a></li>
           <li><a href="{{ URL('transaction/management') }}">transaction</a></li>
+          <li><a href="{{ URL('transaction/management_subscribe') }}">subscribe</a></li>
           <!-- <li><a href="{{ URL('comment/management') }}">comment</a></li> -->
           <li><a href="{{ URL('location/management') }}">shipping</a></li>
           <li><a href="{{ URL('user/management') }}">member</a></li>

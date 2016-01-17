@@ -66,6 +66,7 @@ Route::post('cart/update', 'CartController@update');
 // transaction
 Route::get('transaction/view', 'TransactionController@index');
 Route::get('transaction/management', 'TransactionController@management');
+Route::get('transaction/management_subscribe', 'TransactionController@management_subscribe');
 Route::get('transaction/create', 'TransactionController@create');
 Route::get('transaction/save', 'TransactionController@store');
 Route::get('transaction/user', 'TransactionController@show');

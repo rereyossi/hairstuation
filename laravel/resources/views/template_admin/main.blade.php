@@ -3,6 +3,9 @@
     <head>
         <title>admin dashboard</title>
         <script src="{{ url('assets/js/jquery.min.js') }}"></script>
+        <link rel="stylesheet" type="text/css" href="{{ url('assets/datatables/datatables.min.css') }}"/>
+        <script type="text/javascript" src="{{ url('assets/datatables/datatables.min.js') }}"></script>
+
         <script src="{{ url('assets/js/angular.min.js') }}"></script>
         <link rel="stylesheet" href="{{ url('assets/bootstrap/css/bootstrap.min.css') }}" media="screen" title="no title" charset="utf-8">
     </head>
@@ -95,3 +98,8 @@
     text-transform: capitalize;
   }
 </style>
+<script type="text/javascript">
+  jQuery(document).ready(function($) {
+      $('#table_management').DataTable();
+  });
+</script>

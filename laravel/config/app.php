@@ -147,7 +147,8 @@ return [
 
 
         'Gloudemans\Shoppingcart\ShoppingcartServiceProvider',
-        'Intervention\Image\ImageServiceProvider'
+        'Intervention\Image\ImageServiceProvider',
+
 
 
     ],
@@ -201,6 +202,7 @@ return [
 
         'Cart'            => 'Gloudemans\Shoppingcart\Facades\Cart',
         'Image' => 'Intervention\Image\Facades\Image'
+
 
     ],
 

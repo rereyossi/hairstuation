@@ -1,7 +1,7 @@
 @extends('template_admin.main')
 @section('content')
 
-<table class="table table-striped table-bordered table-hover">
+<table id="table_management" class="table table-striped table-bordered table-hover">
      <thead>
      <tr class="">
          <th>no</th>
