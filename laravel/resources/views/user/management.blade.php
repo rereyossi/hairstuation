@@ -19,9 +19,9 @@
            <td>{{ $user->name }}</td>
            <td>{{ $user->email }}</td>
            <td>
-             @foreach($user->group as $group)
+            @foreach($user->group as $group)
               {{ $group->group_name }}
-             @endforeach
+            @endforeach
             </td>
          </tr>
            <?php $index++; ?>

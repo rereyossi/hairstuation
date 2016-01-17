@@ -107,6 +107,7 @@ class TransactionController extends Controller
                 Mail::send( 'email.transaction.subsribe', compact('transaction', 'products', 'profile'), function( $message ) use ($data)
                 {
                     $message->to( $data['email'] )->from( $data['from'], $data['name'] )->subject( 'hairstuation.com: order product' );
+                    $message->cc($data['from'] , 'hairstuation.com');
                 });
                 // end mail send subsribe
 

@@ -78,9 +78,7 @@ class UserController extends Controller
 
 
     public function management(){
-      $users = User::with(['group' => function ($query) {
-          $query->where('group_name', '=', 'admin');
-      }])->orderBy('id','desc')->get();
+      $users = User::with('group')->orderBy('id','desc')->get();
       $data['header'] = 'user management';
       return view('user.management',compact('users'), $data);
     }
